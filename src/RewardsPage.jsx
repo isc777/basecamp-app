@@ -4,6 +4,9 @@ function RewardsPage({ lang }) {
   const rewards = [
     { id: 1, text_zh: "咖啡券", text_en: "Coffee Coupon", points: 30 },
     { id: 2, text_zh: "小點心", text_en: "Snack", points: 50 },
+    { id: 3, text_zh: "電影票", text_en: "Movie Ticket", points: 200 },
+    { id: 4, text_zh: "購物禮券", text_en: "Shopping Voucher", points: 100 },
+    { id: 5, text_zh: "電子產品折扣", text_en: "Electronics Discount", points: 300 },
   ];
 
   const [score, setScore] = useState(() => parseInt(localStorage.getItem("score")) || 0);
