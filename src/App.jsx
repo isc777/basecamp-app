@@ -7,12 +7,13 @@ import ExplorePage from "./ExplorePage";
 import SocialPage from "./SocialPage";
 import RewardsPage from "./RewardsPage";
 import SettingPage from "./SettingPages";
+import { UserProvider } from "./contexts/UserContext";
 
 // ====== 資料 ======
 const menuItems = {
   zh: [
     { title: "探索公司環境", path: "/explore" },
-    { title: "認識公司資訊", path: "/info" },
+    { title: "交通資訊", path: "/info" },
     { title: "社交任務", path: "/social" },
     { title: "獎勵兌換", path: "/rewards" },
     { title: "設定與個人資訊", path: "/settings" },
@@ -123,27 +124,32 @@ function App() {
   const [lang, setLang] = useState("zh");
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home lang={lang} />} />
-        <Route path="/explore" element={<ExplorePage lang={lang} />} />
-        <Route path="/info" element={<InfoPage lang={lang} />} />
-        <Route path="/social" element={<SocialPage lang={lang} />} />
-        <Route path="/rewards" element={<RewardsPage lang={lang} />} />
-        <Route path="/settings" element={<SettingPage lang={lang} setLang={setLang} />} />
-        <Route path="/mailbox" element={<MailboxPage />} />
-      </Routes>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home lang={lang} />} />
+          <Route path="/explore" element={<ExplorePage lang={lang} />} />
+          <Route path="/info" element={<InfoPage lang={lang} />} />
+          <Route path="/social" element={<SocialPage lang={lang} />} />
+          <Route path="/rewards" element={<RewardsPage lang={lang} />} />
+          <Route path="/settings" element={<SettingPage lang={lang} setLang={setLang} />} />
+          <Route path="/mailbox" element={<MailboxPage />} />
+        </Routes>
 
-      {/* 固定底部按鈕 */}
-      <div className="bottom-buttons">
-        <button className="lang-button" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
-          {lang === "zh" ? "English" : "中文"}
-        </button>
-        <Link to="/" className="home-button">
-          {lang === "zh" ? "首頁" : "Home"}
-        </Link>
-      </div>
-    </Router>
+        {/* 固定底部按鈕 */}
+        <div className="bottom-buttons">
+          <button
+            className="lang-button"
+            onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+          >
+            {lang === "zh" ? "English" : "中文"}
+          </button>
+          <Link to="/" className="home-button">
+            {lang === "zh" ? "首頁" : "Home"}
+          </Link>
+        </div>
+      </Router>
+    </UserProvider>
   );
 }
 
