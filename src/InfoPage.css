@@ -13,7 +13,6 @@
 .info-section {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: #74b8fb;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
@@ -26,7 +25,6 @@
 
 .route-btn.active {
   background-color: #007bff;
-  color: white;
 }
 
 /* 卡片區 */
