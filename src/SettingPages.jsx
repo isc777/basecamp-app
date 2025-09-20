@@ -54,6 +54,7 @@ export default function SettingPage() {
           email: user.email || "",
           photoURL: user.photoURL || "",
           createdAt: serverTimestamp(),
+          scores: 0,
         };
         await setDoc(userRef, newProfile);
         setProfile(newProfile);
@@ -149,6 +150,8 @@ export default function SettingPage() {
             {renderField("factory", "factory")}
             {renderField("phone", "phone", "tel")}
             {renderField("birthday", "birthday", "date")}
+            {renderField("scores", "scores", "number")}
+            {<p>🏆 積分: {profile.scores || "xx"}</p>}
           </div>
 
           <button
