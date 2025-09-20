@@ -13,7 +13,7 @@ import { UserProvider } from "./contexts/UserContext";
 const menuItems = {
   zh: [
     { title: "探索公司環境", path: "/explore" },
-    { title: "認識公司資訊", path: "/info" },
+    { title: "交通資訊", path: "/info" },
     { title: "社交任務", path: "/social" },
     { title: "獎勵兌換", path: "/rewards" },
     { title: "設定與個人資訊", path: "/settings" },
