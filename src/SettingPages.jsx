@@ -4,6 +4,7 @@ import { auth, db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import UserQRCode from "./QRCode/UserQRCode";
 import QRScanner from "./QRCode/QRScanner";
+import "./SettingPages.css";
 
 const provider = new GoogleAuthProvider();
 
@@ -12,10 +13,10 @@ const texts = {
     loginBtn: "使用 Google 登入",
     logoutBtn: "登出",
     scores: "🏆 積分",
-    name: "名字",
+    name: "姓名",
     title: "職稱",
     years: "年資",
-    factory: "工廠",
+    factory: "廠區",
     phone: "電話",
     birthday: "生日",
   },
@@ -24,10 +25,10 @@ const texts = {
     logoutBtn: "Logout",
     scores: "🏆 Scores",
     name: "Name",
-    title: "Title",
-    years: "Years",
+    title: "Title      ",
+    years: "Years      ",
     factory: "Factory",
-    phone: "Phone",
+    phone: "Phone      ",
     birthday: "Birthday",
   },
 };
@@ -106,52 +107,69 @@ export default function SettingPage({ lang = "zh" }) {
 
   const renderField = (field, labelKey, type = "text") => {
     const label = texts[lang][labelKey] || labelKey;
-    if (editingField === field) {
-      return (
-        <input
-          type={type}
-          value={profile?.[field] || ""}
-          onChange={(e) => setProfile((prev) => ({ ...prev, [field]: e.target.value }))}
-          onBlur={(e) => handleEdit(field, e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleEdit(field, e.target.value)}
-          autoFocus
-          className="field-input"
-        />
-      );
-    }
     return (
-      <p className="field-text" onClick={() => setEditingField(field)}>
-        {profile?.[field] || label}
-      </p>
+      <div className="info-row">
+        <span className="info-label">{label}：</span>
+        {editingField === field ? (
+          <input
+            type={type}
+            value={profile?.[field] || ""}
+            onChange={(e) => setProfile((prev) => ({ ...prev, [field]: e.target.value }))}
+            onBlur={(e) => handleEdit(field, e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleEdit(field, e.target.value)}
+            autoFocus
+          />
+        ) : (
+          <span className="info-value" onClick={() => setEditingField(field)}>
+            {profile?.[field] || "-"}
+          </span>
+        )}
+      </div>
     );
   };
 
   return (
-    <div className="page-container">
+    <div className="profile-page">
       {!user ? (
-        <button className="login-btn" onClick={handleLogin}>{texts[lang].loginBtn}</button>
+        <button className="profile-button green" onClick={handleLogin}>
+          {texts[lang].loginBtn}
+        </button>
       ) : (
-        <div className="card-container">
-          {/* 名片頭貼 + 資訊 */}
-          <div className="profile-header">
-            <img src={profile?.photoURL || user.photoURL} alt="avatar" className="avatar"/>
+        <div className="profile-container">
+          {/* 上半部：頭貼 + 資訊 */}
+          <div className="profile-main">
+            {/* 頭貼 */}
+            <div className="profile-avatar-container">
+              <img src={profile?.photoURL || user.photoURL} alt="avatar" className="profile-avatar" />
+            </div>
+
+            {/* 資訊 */}
             <div className="profile-info">
-              <h2>{renderField("name", "name")}</h2>
-              <p className="email">{profile?.email || user.email}</p>
+              {/* 姓名獨立 */}
+              <div className="profile-name">
+                  <h2>{profile?.name || texts[lang].name}</h2>
+              </div>
+
+              {/* email 次要 */}
+              <p className="profile-email">{profile?.email || user.email}</p>
+
+              {/* 其他欄位 */}
               {renderField("title", "title")}
               {renderField("years", "years")}
               {renderField("factory", "factory")}
               {renderField("phone", "phone")}
               {renderField("birthday", "birthday")}
+
               <p>{texts[lang].scores}: {profile?.scores || 0}</p>
             </div>
           </div>
 
-          {/* 按鈕區 */}
-          <div className="card-buttons">
-            <button onClick={() => setShowQRCode((prev) => !prev)}>
+          {/* 底部按鈕 */}
+          <div className="profile-actions">
+            <button className="profile-button green" onClick={() => setShowQRCode((prev) => !prev)}>
               {showQRCode ? "隱藏 QR Code" : "產生 QR Code"}
             </button>
+
             {showQRCode && <UserQRCode profile={profile} />}
 
             {/* 這裡的按鈕完全可以自己設計 */}
@@ -173,6 +191,9 @@ export default function SettingPage({ lang = "zh" }) {
 
             <button onClick={handleLogout}>{texts[lang].logoutBtn}</button>
 
+            <button className="profile-button red" onClick={handleLogout}>
+              {texts[lang].logoutBtn}
+            </button>
           </div>
         </div>
       )}
