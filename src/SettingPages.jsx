@@ -171,12 +171,8 @@ export default function SettingPage({ lang = "zh" }) {
             {renderField("factory", "factory")}
             {renderField("phone", "phone", "tel")}
             {renderField("birthday", "birthday", "date")}
-            {renderField("scores", "scores", "number")}
-            <p>
-              {texts[lang].scores}: {profile?.scores || "xx"}
-            </p>
+            {<p>🏆 積分: {profile?.scores || "xx"}</p>}
           </div>
-
           <button
             onClick={handleLogout}
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
