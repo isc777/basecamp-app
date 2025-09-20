@@ -71,7 +71,7 @@
 /* 底部操作按鈕 */
 .profile-actions {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 12px;
   margin-top: 12px;
 }

@@ -115,23 +115,23 @@ function SocialPage({ lang }) {
       </div>
 
       {/* Tab 內容 */}
-      {activeTab === "completed" && (
-        <TaskList
-          tasks={tasks.filter((task) => completedIds.includes(task.id))}
-          completedIds={completedIds}
-          onComplete={() => {}}}
-          lang={lang}   // 👈 傳遞父層的語言
-        />
-      )}
+{activeTab === "completed" && (
+  <TaskList
+    tasks={tasks.filter((task) => completedIds.includes(task.id))}
+    completedIds={completedIds}
+    onComplete={() => {}}
+    lang={lang}
+  />
+)}
 
-      {activeTab === "tasks" && (
-        <TaskList
-          tasks={tasks.filter((task) => !completedIds.includes(task.id))}
-          completedIds={completedIds}
-          onComplete={handleComplete}
-          lang={lang}   // 👈 傳遞父層的語言
-        />
-      )}
+{activeTab === "tasks" && (
+  <TaskList
+    tasks={tasks.filter((task) => !completedIds.includes(task.id))}
+    completedIds={completedIds}
+    onComplete={handleComplete}
+    lang={lang}
+  />
+)}
     </div>
   );
 }
