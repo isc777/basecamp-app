@@ -8,6 +8,8 @@ import {
 } from "firebase/auth";
 import { auth, db } from "./firebase";
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import UserQRCode from "./QRCode/UserQRCode";
+import QRScanner from "./QRCode/QRScanner";
 
 const provider = new GoogleAuthProvider();
 
@@ -15,6 +17,8 @@ export default function SettingPage() {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null); // Firestore 中的資料
   const [editingField, setEditingField] = useState(null);
+  const [showQRCode, setShowQRCode] = useState(false);
+  const [scannedData, setScannedData] = useState(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -150,6 +154,26 @@ export default function SettingPage() {
             {renderField("phone", "phone", "tel")}
             {renderField("birthday", "birthday", "date")}
           </div>
+
+          {/* 🔹 按鈕：顯示 QRCode */}
+          <button
+            onClick={() => setShowQRCode((prev) => !prev)}
+            className="mt-3 px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition"
+          >
+            {showQRCode ? "隱藏 QR Code" : "產生 QR Code"}
+          </button>
+          {showQRCode && <UserQRCode profile={profile} />}
+
+          {/* 🔹 QR Code 掃描 */}
+          <QRScanner onScan={setScannedData} />
+
+          {/* 🔹 顯示掃描到的資料 */}
+          {scannedData && (
+            <div className="mt-2 p-3 bg-gray-100 rounded shadow w-64 mx-auto text-left text-xs">
+              <h3 className="font-semibold mb-1">掃描到的資訊：</h3>
+              <pre>{JSON.stringify(scannedData, null, 2)}</pre>
+            </div>
+          )}
 
           <button
             onClick={handleLogout}
