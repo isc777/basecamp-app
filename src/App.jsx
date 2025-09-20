@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
-import MailboxPage from "./MailboxPage"; // 你的信箱頁面元件
-import InfoPage from "./InfoPage"; // 你的公司資訊頁面元件
-import ExplorePage from "./ExplorePage"; // 你的探索頁面元件
-import SocialPage from "./SocialPage"; // 你的社交任務頁面元件
-import RewardsPage from "./RewardsPage"; // 你的獎勵頁面元件
-import SettingPage from "./SettingPages"; // 你的設定頁面元件
+import MailboxPage from "./MailboxPage";
+import InfoPage from "./InfoPage";
+import ExplorePage from "./ExplorePage";
+import SocialPage from "./SocialPage";
+import RewardsPage from "./RewardsPage";
+import SettingPage from "./SettingPages";
 
 // ====== 資料 ======
 const menuItems = {
@@ -118,20 +118,6 @@ function Page({ lang, title }) {
   );
 }
 
-// ====== 設定頁 ======
-function Settings({ lang, setLang }) {
-  return (
-    <div className="page-container">
-      <button
-        className="lang-button"
-        onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-      >
-        {lang === "zh" ? "切換到 English" : "Switch to 中文"}
-      </button>
-    </div>
-  );
-}
-
 // ====== App 元件 ======
 function App() {
   const [lang, setLang] = useState("zh");
@@ -144,9 +130,19 @@ function App() {
         <Route path="/info" element={<InfoPage lang={lang} />} />
         <Route path="/social" element={<SocialPage lang={lang} />} />
         <Route path="/rewards" element={<RewardsPage lang={lang} />} />
-        <Route path="/settings" element={<SettingPage lang={lang} />} />
+        <Route path="/settings" element={<SettingPage lang={lang} setLang={setLang} />} />
         <Route path="/mailbox" element={<MailboxPage />} />
       </Routes>
+
+      {/* 固定底部按鈕 */}
+      <div className="bottom-buttons">
+        <button className="lang-button" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
+          {lang === "zh" ? "English" : "中文"}
+        </button>
+        <Link to="/" className="home-button">
+          {lang === "zh" ? "首頁" : "Home"}
+        </Link>
+      </div>
     </Router>
   );
 }
