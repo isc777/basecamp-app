@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "./contexts/UserContext";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { motion } from "framer-motion";
 
 function RewardsPage({ lang }) {
   const rewards = [
@@ -145,19 +146,25 @@ function RewardsPage({ lang }) {
                 const claimed = profile?.claimedMilestones?.includes(score); // 是否已經領過
 
                 return (
-                  <span key={i} style={{
-                    position: "absolute",
-                    left: `${Math.min(score / milestones[milestones.length-1], 1) * 100}%`,
-                    top: 0,
-                    transform: "translateX(-80%)",
-                    fontSize: 35,
-                    cursor: unlocked && !claimed ? "pointer" : "default",
-                    color: unlocked && !claimed ? "#FFD700" : "#aaa"
-                  }}
-                  onClick={() => unlocked && !claimed && claimMilestone(score)}>
+                  <motion.span
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      left: `${Math.min(score / milestones[milestones.length - 1], 1) * 100}%`,
+                      top: 0,
+                      transform: "translateX(-80%)",
+                      fontSize: 35,
+                      cursor: unlocked ? "pointer" : "default",
+                    }}
+                    whileHover={unlocked && !claimed ? { scale: 1.3, rotate: -5 } : {}}
+                    whileTap={unlocked && !claimed ? { scale: 0.9 } : {}}
+                    animate={claimed ? { scale: [1.2, 0.8, 1], rotate: [0, 10, -10, 0] } : {}}
+                    transition={{ duration: 0.5 }}
+                    onClick={() => unlocked && !claimed && claimMilestone(score)}
+                  >
                   {/* 狀態顯示 */}
                   {claimed ? "📦" : "🎁"}
-                  </span>
+                  </motion.span>
                 )
               })}
             </div>
