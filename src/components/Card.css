@@ -5,6 +5,11 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* 投影讓它浮起來 */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   color: black;
+
+  /* 中英文統一字體大小 */
+  font-size: 16px;
+  line-height: 1.5;
+  font-family: "Noto Sans TC", "Segoe UI", Arial, sans-serif;
 }
 
 /* hover 效果 */
@@ -18,14 +23,17 @@
   background: #E8F0FE;
   border: 2px solid #4285F4;
 }
+
 .card.sport {
   background: #E6F4EA;
   border: 2px solid #34A853;
 }
+
 .card.leisure {
   background: #F3E8FF;
   border: 2px solid #A142F4;
 }
+
 .card.food {
   background: #FFF4E5;
   border: 2px solid #FBBC05;

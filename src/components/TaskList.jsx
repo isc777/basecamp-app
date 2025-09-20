@@ -1,12 +1,11 @@
 import React from "react";
 
-/**
- * props:
- *  - tasks: [{id, text, point}]
- *  - completedIds: number[] 已完成的 task id
- *  - onComplete(task): function 點完成時呼叫
- */
-function TaskList({ tasks = [], completedIds = [], onComplete}) {
+function TaskList({ tasks = [], completedIds = [], onComplete, lang = "zh" }) {
+  const dict = {
+    zh: { point: "分", complete: "完成", done: "已完成" },
+    en: { point: "pt", complete: "Complete", done: "Done" },
+  };
+
   return (
     <ul style={{ listStyle: "none", padding: 0, width: "100%" }}>
       {tasks.map((task) => {
@@ -27,7 +26,9 @@ function TaskList({ tasks = [], completedIds = [], onComplete}) {
           >
             <div style={{ textAlign: "left" }}>
               <div style={{ fontWeight: 600 }}>{task.text}</div>
-              <div style={{ fontSize: 12, color: "#666" }}>{task.point} 分</div>
+              <div style={{ fontSize: 12, color: "#666" }}>
+                {task.point} {dict[lang].point}
+              </div>
             </div>
 
             <button
@@ -42,7 +43,9 @@ function TaskList({ tasks = [], completedIds = [], onComplete}) {
                 cursor: done ? "not-allowed" : "pointer",
               }}
             >
-              {done ? (task.doneLabel || "已完成") : (task.completeLabel || "完成")}
+              {done
+                ? task.doneLabel || dict[lang].done
+                : task.completeLabel || dict[lang].complete}
             </button>
           </li>
         );
