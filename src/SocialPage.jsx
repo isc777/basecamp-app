@@ -91,11 +91,10 @@ function SocialPage({ lang }) {
             marginRight: "10px",
             backgroundColor: activeTab === "tasks" ? "#4caf50" : "#eee",
             color: activeTab === "tasks" ? "#fff" : "#000",
-            padding: "50px 80px",
+            padding: "8px 16px",
             border: "none",
             borderRadius: "6px",
             cursor: "pointer",
-            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "任務列表" : "Task List"}
@@ -105,11 +104,10 @@ function SocialPage({ lang }) {
           style={{
             backgroundColor: activeTab === "completed" ? "#4caf50" : "#eee",
             color: activeTab === "completed" ? "#fff" : "#000",
-            padding: "50px 80px",
+            padding: "8px 16px",
             border: "none",
             borderRadius: "6px",
             cursor: "pointer",
-            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "已完成任務" : "Completed Tasks"}

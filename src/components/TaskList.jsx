@@ -17,7 +17,7 @@ function TaskList({ tasks = [], completedIds = [], onComplete, lang = "zh" }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              padding: "20px",
+              padding: "10px",
               border: "1px solid #eee",
               borderRadius: 8,
               marginBottom: 8,
@@ -25,8 +25,8 @@ function TaskList({ tasks = [], completedIds = [], onComplete, lang = "zh" }) {
             }}
           >
             <div style={{ textAlign: "left" }}>
-              <div style={{ fontWeight: 700,fontSize: 25 }}>{task.text}</div>
-              <div style={{ fontSize: 20, color: "#666" }}>
+              <div style={{ fontWeight: 600 }}>{task.text}</div>
+              <div style={{ fontSize: 12, color: "#666" }}>
                 {task.point} {dict[lang].point}
               </div>
             </div>
