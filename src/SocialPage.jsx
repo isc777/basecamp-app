@@ -1,3 +1,4 @@
+// src/SocialPage.jsx
 import React, { useState, useEffect } from "react";
 import TaskList from "./components/TaskList";
 import { useUser } from "./contexts/UserContext";
@@ -27,6 +28,16 @@ function SocialPage({ lang }) {
     { id: 1, text: "Have coffee with colleagues", point: 10 },
     { id: 2, text: "Have lunch together", point: 10 },
     { id: 3, text: "Share office equipment", point: 10 },
+    { id: 4, text: "Participate in company events", point: 20 },
+    { id: 5, text: "Get to know interns", point: 20 },
+    { id: 6, text: "Share work experience", point: 15 },
+    { id: 7, text: "Attend team meetings and provide suggestions", point: 15 },
+    { id: 8, text: "Organize team-building activities", point: 25 },
+    { id: 9, text: "Join company volunteer activities", point: 30 },
+    { id: 10, text: "Refer talented individuals to join the company", point: 50 },
+    { id: 11, text: "Collaborate with colleagues to complete projects", point: 40 },
+    { id: 12, text: "Participate in cross-departmental collaboration", point: 35 },
+    { id: 13, text: "Complete and edit personal profile", point: 15 },
   ];
 
   const tasks = lang === "zh" ? tasks_zh : tasks_en;
@@ -108,7 +119,8 @@ function SocialPage({ lang }) {
         <TaskList
           tasks={tasks.filter((task) => completedIds.includes(task.id))}
           completedIds={completedIds}
-          onComplete={() => {}}
+          onComplete={() => {}}}
+          lang={lang}   // 👈 傳遞父層的語言
         />
       )}
 
@@ -117,6 +129,7 @@ function SocialPage({ lang }) {
           tasks={tasks.filter((task) => !completedIds.includes(task.id))}
           completedIds={completedIds}
           onComplete={handleComplete}
+          lang={lang}   // 👈 傳遞父層的語言
         />
       )}
     </div>

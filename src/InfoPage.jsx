@@ -1,30 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import busData from "./data/busData.json"; // 公車資料
+import "./InfoPage.css";
 
 function InfoPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+  const [buses, setBuses] = useState([]);
 
-  const handleLogin = async () => {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-    if (res.ok) {
-      setMsg("登入成功！");
-    } else {
-      setMsg("登入失敗！");
-    }
-  };
+  useEffect(() => {
+    // 模擬 fetch 公車資料
+    setBuses(busData);
+  }, []);
 
   return (
     <div className="page-container">
-      <h2>公司資訊</h2>
-      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="帳號" />
-      <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="密碼" />
-      <button onClick={handleLogin}>登入</button>
-      <p>{msg}</p>
+      {/* 公車資訊區 */}
+      <section className="info-section">
+        <h1>園區公車資訊</h1>
+        <div className="bus-cards-container">
+          {buses.map((bus, index) => (
+            <div key={index} className="bus-card">
+              <h2>{bus.route}（{bus.start} → {bus.end}）</h2>
+              <p><strong>營運時間：</strong>{bus.time}</p>
+              <p><strong>發車間隔：</strong>{bus.interval}</p>
+              <p><strong>路線描述：</strong>{bus.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

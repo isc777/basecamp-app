@@ -1,16 +1,15 @@
-/* 全局樣式 */
+/* ====== 全局樣式 ====== */
 .App {
   text-align: center;
   font-family: sans-serif;
 }
 
-/* 主體背景與自適應高度 */
 body, html, #root, .app-root {
   margin: 0;
   padding: 0;
   min-height: 100vh;
   width: 100%;
-  background-color: rgb(211, 208, 164); /* 唯一背景色 */
+  background-color: rgb(211, 208, 164);
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
@@ -18,21 +17,79 @@ body, html, #root, .app-root {
   box-sizing: border-box;
 }
 
-/* 主頁與各頁容器 */
+/* ====== 主頁與各頁容器 ====== */
 .home-container, .page-container, .explore-page {
   text-align: center;
   padding: 2rem;
-  padding-bottom: 100px; /* 為底部懸浮按鈕預留空間 */
+  padding-bottom: 160px; /* 底部懸浮按鈕空間 */
 }
 
-/* 主選單格子 */
-.menu-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 180px);
-  grid-template-rows: repeat(2, 100px);
-  gap: 1rem;
-  justify-content: center;
+/* ====== 主選單格子 ====== */
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* 各排間距 */
   margin-top: 2rem;
+}
+
+.menu-row-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* 左對齊 */
+  width: 100%;
+}
+
+.menu-row-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  width: 100%;
+  padding-bottom: 8px;
+  border-bottom: 4px solid #aaa; /* 分隔線 */
+}
+
+.row-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.row-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.row-title-text {
+  font-weight: bold;
+  font-size: 24px; /* 放大文字 */
+  color: #333;
+}
+
+.menu-row {
+  display: grid;
+  gap: 1rem;
+}
+
+/* 第一排 2 個按鈕 */
+.menu-row-wrapper:nth-child(1) .menu-row {
+  grid-template-columns: repeat(2, 180px);
+}
+
+/* 第二排 2 個按鈕 */
+.menu-row-wrapper:nth-child(2) .menu-row {
+  grid-template-columns: repeat(2, 180px);
+}
+
+/* 第三排 1 個按鈕 */
+.menu-row-wrapper:nth-child(3) .menu-row {
+  grid-template-columns: 180px;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;  /* 滿螢幕高度 */
 }
 
 .menu-button {
@@ -46,13 +103,14 @@ body, html, #root, .app-root {
   font-weight: bold;
   border-radius: 8px;
   transition: 0.2s;
+  padding: 16px;
 }
 
 .menu-button:hover {
   background-color: #b4f1f1;
 }
 
-/* 任務列表按鈕 */
+/* ====== 任務列表按鈕 ====== */
 .tasks-container {
   display: flex;
   flex-wrap: wrap;
@@ -83,24 +141,9 @@ body, html, #root, .app-root {
   opacity: 0.6;
 }
 
-/* 兌換 / 語言 / 首頁按鈕 */
-.lang-button, .redeem-button, .home-button {
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.redeem-button:disabled {
-  background-color: #aaaaaa;
-  cursor: not-allowed;
-}
-
-
+/* ====== 底部按鈕 ====== */
 .bottom-buttons {
-  position: fixed;
+  position: sticky;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
@@ -130,10 +173,13 @@ body, html, #root, .app-root {
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   transition: all 0.2s;
-
-  /* 文字置中 */
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.bottom-buttons .lang-button:hover,
+.bottom-buttons .home-button:hover {
+  transform: translateY(-2px);
 }
