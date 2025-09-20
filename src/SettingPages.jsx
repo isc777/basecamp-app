@@ -156,6 +156,7 @@ export default function SettingPage({ lang = "zh" }) {
             <QRScanner onScan={setScannedData} />
             {scannedData && <pre className="scan-result">{JSON.stringify(scannedData, null, 2)}</pre>}
             <button onClick={handleLogout}>{texts[lang].logoutBtn}</button>
+
           </div>
         </div>
       )}

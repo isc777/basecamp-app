@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "./contexts/UserContext";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
 function RewardsPage({ lang }) {
@@ -12,16 +12,23 @@ function RewardsPage({ lang }) {
     { id: 5, text_zh: "電子產品折扣", text_en: "Electronics Discount", points: 300 },
   ];
 
-  const { user, profile, setProfile } = useUser(); // 使用 Context
-  const [redeemedIds, setRedeemedIds] = useState(() => {
-    const saved = localStorage.getItem("redeemedIds");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [activeTab, setActiveTab] = useState("progress"); // "progress" 或 "list"
+  const { user, profile, setProfile } = useUser(); // Context
+  const [redeemedIds, setRedeemedIds] = useState([]);
+  const [activeTab, setActiveTab] = useState("progress");
 
+  // 初次載入：從 Firestore 抓 redeemedIds
   useEffect(() => {
-    localStorage.setItem("redeemedIds", JSON.stringify(redeemedIds));
-  }, [redeemedIds]);
+    if (!user) return;
+    const fetchData = async () => {
+      const userRef = doc(db, "profiles", user.uid);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        setRedeemedIds(data.redeemedIds || []);
+      }
+    };
+    fetchData();
+  }, [user]);
 
   // 兌換獎勵
   const redeem = async (reward) => {
@@ -29,16 +36,18 @@ function RewardsPage({ lang }) {
 
     if (profile.scores >= reward.points && !redeemedIds.includes(reward.id)) {
       const newScore = profile.scores - reward.points;
+      const newRedeemedIds = [...redeemedIds, reward.id];
 
-      // 更新 Firestore
       const userRef = doc(db, "profiles", user.uid);
-      await updateDoc(userRef, { scores: newScore });
+      // 一次更新兩個欄位
+      await updateDoc(userRef, {
+        scores: newScore,
+        redeemedIds: newRedeemedIds,
+      });
 
-      // 更新 Context
+      // 更新 Context + 本地 state
       setProfile({ ...profile, scores: newScore });
-
-      // 更新兌換紀錄
-      setRedeemedIds((prev) => [...prev, reward.id]);
+      setRedeemedIds(newRedeemedIds);
 
       alert(lang === "zh" ? "🎉 兌換成功！" : "🎉 Redeemed!");
     }
