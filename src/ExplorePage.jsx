@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { exploreData } from "./data/ExploreData.js"; // 確認檔名小寫
-import "./ExplorePage.css"; // 你的自訂樣式
+import { exploreData } from "./data/ExploreData.js";
+import "./ExplorePage.css";
 import Card from "./components/Card";
 
 export default function ExplorePage() {
@@ -22,9 +22,7 @@ export default function ExplorePage() {
         {categories.map((cat) => (
           <button
             key={cat.key}
-            className={`category-btn ${
-              activeCategory === cat.key ? "active" : ""
-            }`}
+            className={`category-btn ${activeCategory === cat.key ? "active" : ""}`}
             onClick={() => setActiveCategory(cat.key)}
           >
             {cat.label}
@@ -37,6 +35,7 @@ export default function ExplorePage() {
         {exploreData[activeCategory].map((item, idx) => (
           <Card
             key={idx}
+            category={activeCategory}
             title={item.title}
             desc={item.desc}
             phone={item.phone}
@@ -46,15 +45,4 @@ export default function ExplorePage() {
       </div>
     </div>
   );
-  <div
-  className={`p-5 rounded-2xl shadow-md ${
-    category === 'office'
-      ? 'bg-blue-50'
-      : category === 'sport'
-      ? 'bg-green-50'
-      : category === 'leisure'
-      ? 'bg-purple-50'
-      : 'bg-yellow-50'
-  }`}
-></div>
 }
