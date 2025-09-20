@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "./contexts/UserContext";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { motion } from "framer-motion";
 
 function RewardsPage({ lang }) {
   const rewards = [
@@ -15,6 +16,32 @@ function RewardsPage({ lang }) {
   const { user, profile, setProfile } = useUser(); // Context
   const [redeemedIds, setRedeemedIds] = useState([]);
   const [activeTab, setActiveTab] = useState("progress");
+  const [claimedMilestones, setClaimedMilestones] = useState([]);
+  const milestones = [50, 100, 250, 500]; // 里程碑分數
+
+  // 點擊里程碑寶箱，領取額外獎勵
+  const claimMilestone = async (score) => {
+    if (!user || claimedMilestones.includes(score)) return;
+
+    const rewardPoints = 20; // 額外獎勵分數
+    const userRef = doc(db, "profiles", user.uid);
+    
+    await updateDoc(userRef, {
+      scores: (profile.scores || 0) + rewardPoints,
+      claimedMilestones: [...(profile.claimedMilestones || []), score],
+    });
+
+    setProfile({
+      ...profile,
+      scores: (profile.scores || 0) + rewardPoints,
+      claimedMilestones: [...(profile.claimedMilestones || []), score]
+    });
+
+    setClaimedMilestones([...claimedMilestones, score]);
+
+    alert(`🎉 你獲得額外 ${rewardPoints} 分！`);
+  };
+
 
   // 初次載入：從 Firestore 抓 redeemedIds
   useEffect(() => {
@@ -62,13 +89,14 @@ function RewardsPage({ lang }) {
         <button
           onClick={() => setActiveTab("progress")}
           style={{
-            marginRight: 10,
+            marginRight: "10px",
             backgroundColor: activeTab === "progress" ? "#4caf50" : "#eee",
             color: activeTab === "progress" ? "#fff" : "#000",
-            padding: "8px 16px",
+            padding: "40px 60px",
             border: "none",
             borderRadius: 6,
             cursor: "pointer",
+            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "分數進度" : "Progress"}
@@ -78,10 +106,11 @@ function RewardsPage({ lang }) {
           style={{
             backgroundColor: activeTab === "list" ? "#4caf50" : "#eee",
             color: activeTab === "list" ? "#fff" : "#000",
-            padding: "8px 16px",
+            padding: "40px 60px",
             border: "none",
             borderRadius: 6,
             cursor: "pointer",
+            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "可兌換獎勵" : "Reward List"}
@@ -90,29 +119,50 @@ function RewardsPage({ lang }) {
 
       {/* Progress Tab */}
       {activeTab === "progress" && (
-        <div>
+        <div style={{ textAlign: "center" }}> {/* 外層置中 */}
           <p>{lang === "zh" ? "你的分數: " : "Your Score: "} {profile?.scores || 0}</p>
-          <div
-            style={{
-              height: 25,
-              width: "100%",
-              backgroundColor: "#eee",
-              borderRadius: 12,
-              overflow: "hidden",
-              marginBottom: 10,
-            }}
-          >
-            <div
-              style={{
-                width: `${Math.min((profile?.scores || 0) % 30 / 30, 1) * 100}%`,
-                height: "100%",
-                backgroundColor: "#4caf50",
-                transition: "width 0.3s",
-              }}
-            ></div>
+          
+          <div style={{ display: "inline-block", width: "60vh", height: 70, backgroundColor: "#eee", borderRadius: 15, overflow: "hidden", marginBottom: 20, position: "relative" }}>
+            
+            {/* 進度填充 */}
+            <div style={{
+              width: `${Math.min(profile?.scores / milestones[milestones.length-1], 1) * 100}%`,
+              height: "100%",
+              background: "linear-gradient(90deg, #4caf50, #00e676)",
+              borderRadius: 15,
+              transition: "width 0.5s ease-out",
+            }} />
+
+            {/* 寶箱里程碑 */}
+            {milestones.map((score, i) => {
+              const unlocked = profile?.scores >= score;
+              const claimed = profile?.claimedMilestones?.includes(score);
+
+              return (
+                <motion.span
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    left: `${Math.min(score / milestones[milestones.length - 1], 1) * 100}%`,
+                    top: 0,
+                    transform: "translateX(-50%)",
+                    fontSize: 35,
+                    cursor: unlocked ? "pointer" : "default",
+                  }}
+                  whileHover={unlocked && !claimed ? { scale: 1.3, rotate: -5 } : {}}
+                  whileTap={unlocked && !claimed ? { scale: 0.9 } : {}}
+                  animate={claimed ? { scale: [1.2, 0.8, 1], rotate: [0, 10, -10, 0] } : {}}
+                  transition={{ duration: 0.5 }}
+                  onClick={() => unlocked && !claimed && claimMilestone(score)}
+                >
+                  {claimed ? "📦" : "🎁"}
+                </motion.span>
+              )
+            })}
           </div>
         </div>
       )}
+
 
       {/* Reward List Tab */}
       {activeTab === "list" && (
