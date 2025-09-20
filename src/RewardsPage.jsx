@@ -123,9 +123,9 @@ function RewardsPage({ lang }) {
             <div
               style={{
                 alignItems: "center",
-                padding: "1px 15px",
+                //padding: "1px 15px",
                 height: 50,
-                width: 200,
+                width: 350,
                 backgroundColor: "#eee",
                 borderRadius: 15,
                 overflow: "hidden",
