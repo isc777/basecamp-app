@@ -1,4 +1,3 @@
-// src/components/Login.jsx
 import { useState, useEffect } from "react";
 import {
   signInWithPopup,
@@ -11,7 +10,33 @@ import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firest
 
 const provider = new GoogleAuthProvider();
 
-export default function SettingPage() {
+// 🔹 多語系字典
+const texts = {
+  zh: {
+    loginBtn: "使用 Google 登入",
+    logoutBtn: "登出",
+    scores: "🏆 積分",
+    name: "名字",
+    title: "職稱",
+    years: "年資",
+    factory: "工廠",
+    phone: "電話",
+    birthday: "生日",
+  },
+  en: {
+    loginBtn: "Sign in with Google",
+    logoutBtn: "Logout",
+    scores: "🏆 Scores",
+    name: "Name",
+    title: "Title",
+    years: "Years",
+    factory: "Factory",
+    phone: "Phone",
+    birthday: "Birthday",
+  },
+};
+
+export default function SettingPage({ lang = "zh" }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null); // Firestore 中的資料
   const [editingField, setEditingField] = useState(null);
@@ -82,9 +107,8 @@ export default function SettingPage() {
 
     let newValue = value;
 
-    // 🔹 限制只能數字
     if (field === "years" || field === "phone") {
-      newValue = value.replace(/\D/g, ""); // 移除非數字
+      newValue = value.replace(/\D/g, "");
     }
 
     await updateDoc(userRef, { [field]: newValue });
@@ -92,15 +116,14 @@ export default function SettingPage() {
     setEditingField(null);
   };
 
-  const renderField = (field, label, type = "text") => {
+  const renderField = (field, labelKey, type = "text") => {
+    const label = texts[lang][labelKey] || labelKey;
     if (editingField === field) {
       return (
         <input
           type={type}
           value={profile?.[field] || ""}
-          onChange={(e) =>
-            setProfile((prev) => ({ ...prev, [field]: e.target.value }))
-          }
+          onChange={(e) => setProfile((prev) => ({ ...prev, [field]: e.target.value }))}
           onBlur={(e) => handleEdit(field, e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -130,7 +153,7 @@ export default function SettingPage() {
           onClick={handleLogin}
           className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
         >
-          使用 Google 登入
+          {texts[lang].loginBtn}
         </button>
       ) : (
         <div className="bg-white p-6 rounded-lg shadow text-center space-y-2">
@@ -139,9 +162,7 @@ export default function SettingPage() {
             alt="avatar"
             className="w-16 h-16 rounded-full mx-auto"
           />
-          <h2 className="mt-3 text-lg font-bold">
-            {renderField("name", "name")}
-          </h2>
+          <h2 className="mt-3 text-lg font-bold">{renderField("name", "name")}</h2>
           <p className="text-sm text-gray-600">{profile?.email || user.email}</p>
 
           <div className="flex flex-col items-center space-y-1 mt-2">
@@ -156,7 +177,7 @@ export default function SettingPage() {
             onClick={handleLogout}
             className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition"
           >
-            登出
+            {texts[lang].logoutBtn}
           </button>
         </div>
       )}
