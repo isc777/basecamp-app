@@ -1,4 +1,3 @@
-/* App.css */
 .App {
   text-align: center;
   font-family: sans-serif;
@@ -10,10 +9,11 @@
 }
 
 .menu-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 180px);
+  grid-template-rows: repeat(2, 100px);
   gap: 1rem;
+  justify-content: center;
   margin-top: 2rem;
 }
 
@@ -21,8 +21,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 180px;
-  height: 100px;
   background-color: #007bff;
   color: white;
   text-decoration: none;
@@ -55,7 +53,6 @@
   background-color: #f0f0f0;
   cursor: pointer;
   font-weight: bold;
-  flex-shrink: 0;
 }
 
 .task-button.completed {
@@ -67,7 +64,7 @@
   opacity: 0.6;
 }
 
-.lang-button, .redeem-button {
+.lang-button, .redeem-button, .home-button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
   border: none;
@@ -81,9 +78,12 @@
   cursor: not-allowed;
 }
 
-body, html, #root {
+body, html, #root, .app-root {
   height: 100%;
   background-color: gray;
   margin: 0;
   font-family: sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import "./App.css";
-import MailboxPage from "./MailboxPage"; 
 
 // ====== 資料 ======
 const menuItems = {
@@ -21,7 +20,6 @@ const menuItems = {
   ],
 };
 
-// 假任務
 const tasks_zh = [
   { title: "開通信箱", point: 10 },
   { title: "掃描 QR code 完成探索任務", point: 15 },
@@ -98,8 +96,14 @@ function Page({ lang, title }) {
 
   const handleComplete = (task) => setScore(score + task.point);
 
+  const navigate = useNavigate();
+
   return (
     <div className="page-container">
+      <button className="home-button" onClick={() => navigate("/")}>
+        {lang === "zh" ? "🏠 主頁" : "🏠 Home"}
+      </button>
+
       <h2>{title}</h2>
       <p>{lang === "zh" ? "分數" : "Score"}: {score}</p>
       <TaskList tasks={tasks} onComplete={handleComplete} />
@@ -114,61 +118,36 @@ function Page({ lang, title }) {
   );
 }
 
-function Info({ lang }) {
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "認識公司資訊" : "Company Info"}</h2>
-      <p>{lang === "zh" ? "這裡可以放公司介紹、規章與公告" : "Company introduction, rules, announcements"}</p>
-      <Link to="/mailbox" className="menu-button">
-        {lang === "zh" ? "開通信箱" : "Open Mailbox"}
-      </Link>
-    </div>
-  );
-}
-
-function Settings({ lang, setLang }) {
-  return (
-    <Router>
-      <div className="page-container">
-        {/* 語言切換按鈕 */}
-        <button
-          className="lang-button"
-          onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-        >
-          {lang === "zh" ? "切換到 English" : "Switch to 中文"}
-        </button>
-
-        {/* 路由 */}
-        <Routes>
-          <Route path="/" element={<Home lang={lang} />} />
-          <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
-          <Route path="/info" element={<Page lang={lang} title={lang === "zh" ? "認識公司資訊" : "Company Info"} />} />
-          <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
-          <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
-          <Route path="/settings" element={<Page lang={lang} title={lang === "zh" ? "設定與個人資訊" : "Settings & Profile"} />} />
-        </Routes>
-      </div>
-    </div>
-  );
-}
-
-// App 元件
+// ====== App 主組件 ======
 function App() {
   const [lang, setLang] = useState("zh");
 
   return (
-    <Router>
+    <div className="app-root">
+      <button
+        className="lang-button"
+        onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+      >
+        {lang === "zh" ? "切換到 English" : "Switch to 中文"}
+      </button>
+
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore lang={lang} />} />
-        <Route path="/info" element={<Info lang={lang} />} />
-        <Route path="/social" element={<Social lang={lang} />} />
-        <Route path="/rewards" element={<Rewards lang={lang} />} />
-        <Route path="/settings" element={<Settings lang={lang} setLang={setLang} />} />
-        <Route path="/mailbox" element={<MailboxPage />} /> {/* 新增 */}
+        <Route path="/" element={<Home lang={lang} />} />
+        <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
+        <Route path="/info" element={<Page lang={lang} title={lang === "zh" ? "認識公司資訊" : "Company Info"} />} />
+        <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
+        <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
+        <Route path="/settings" element={<Page lang={lang} title={lang === "zh" ? "設定與個人資訊" : "Settings & Profile"} />} />
       </Routes>
-    </Router>
+    </div>
   );
 }
 
-export default App;
+// ====== App Wrapper ======
+export default function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
