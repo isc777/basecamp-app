@@ -1,0 +1,54 @@
+.page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.info-section {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #74b8fb;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.info-section h1 {
+  margin-bottom: 15px;
+  color: hsl(213, 36%, 95%);
+}
+
+.info-section h2 {
+  margin-bottom: 10px;
+  color: #e5eaf0;
+}
+
+.info-section p,
+.info-section li {
+  margin: 5px 0;
+}
+
+/* 卡片容器改成 flex */
+.bus-cards-container {
+  display: flex;
+  flex-wrap: wrap;            /* 允許換行 */
+  gap: 20px;                  /* 卡片間距 */
+}
+
+/* 公車卡片 */
+.bus-card {
+  background-color: #74b8fb;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  flex: 0 1 calc(50% - 10px); /* 每行兩張，留間距 */
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+/* 響應式：螢幕寬度小於 600px 時，每行只顯示一張 */
+@media (max-width: 600px) {
+  .bus-card {
+    flex: 0 1 100%;
+  }
+}
