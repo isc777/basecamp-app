@@ -1,0 +1,29 @@
+/* src/components/Card.css */
+.card {
+  background: #800080;              /* 淺灰底色 */
+  border: 2px solid #e0e0e0;         /* 灰色邊框 */
+  border-radius: 12px;               /* 圓角 */
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: 0.2s;
+}
+
+.card:hover {
+  background: #ffffff;               /* 滑過變白 */
+  border-color: #007bff;             /* 滑過時藍色邊框 */
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 18px;
+  color: #333;
+}
+
+.card p {
+  margin: 4px 0;
+  color: #555;
+  font-size: 14px;
+}
