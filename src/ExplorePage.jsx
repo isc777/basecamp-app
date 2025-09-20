@@ -1,32 +1,48 @@
 import React, { useState } from "react";
+import { exploreData } from "./data/ExploreData.js";
+import "./ExplorePage.css";
+import Card from "./components/Card";
 
-function InfoPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [msg, setMsg] = useState("");
+export default function ExplorePage() {
+  const [activeCategory, setActiveCategory] = useState("office");
 
-  const handleLogin = async () => {
-    const res = await fetch("http://localhost:3000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-    if (res.ok) {
-      setMsg("登入成功！");
-    } else {
-      setMsg("登入失敗！");
-    }
-  };
+  const categories = [
+    { key: "office", label: "辦公場所" },
+    { key: "sport", label: "運動設施" },
+    { key: "leisure", label: "休閒場所" },
+    { key: "food", label: "美食街" },
+  ];
 
   return (
-    <div className="page-container">
-      <h2>公司環境</h2>
-      <input value={username} onChange={e => setUsername(e.target.value)} placeholder="帳號" />
-      <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="密碼" />
-      <button onClick={handleLogin}>登入</button>
-      <p>{msg}</p>
+    <div className="explore-page">
+      <h1>探索 Explore</h1>
+
+      {/* 分類按鈕 */}
+      <div className="category-buttons">
+        {categories.map((cat) => (
+          <button
+            key={cat.key}
+            className={`category-btn ${activeCategory === cat.key ? "active" : ""}`}
+            onClick={() => setActiveCategory(cat.key)}
+          >
+            {cat.label}
+          </button>
+        ))}
+      </div>
+
+      {/* 顯示該分類卡片 */}
+      <div className="cards-container">
+        {exploreData[activeCategory].map((item, idx) => (
+          <Card
+            key={idx}
+            category={activeCategory}
+            title={item.title}
+            desc={item.desc}
+            phone={item.phone}
+            time={item.time}
+          />
+        ))}
+      </div>
     </div>
   );
 }
-
-export default InfoPage;
