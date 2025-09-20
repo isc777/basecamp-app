@@ -1,54 +1,59 @@
 .page-container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 2rem;
+  text-align: center;
 }
 
-.info-section {
-  margin-bottom: 30px;
-  padding: 20px;
-  background-color: #74b8fb;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+/* 標題 */
+.info-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
 }
 
-.info-section h1 {
-  margin-bottom: 15px;
-  color: hsl(213, 36%, 95%);
+/* 右上方按鈕區 */
+.route-buttons {
+  display: flex;
+  justify-content: flex-end; 
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.info-section h2 {
-  margin-bottom: 10px;
-  color: #e5eaf0;
+.route-btn {
+  padding: 8px 16px;
+  border: 1px solid #007bff;
+  background-color: rgb(246, 242, 242);
+  color: #007bff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
 }
 
-.info-section p,
-.info-section li {
-  margin: 5px 0;
+.route-btn:hover {
+  background-color: #007bff;
+  color: white;
 }
 
-/* 卡片容器改成 flex */
+.route-btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+/* 卡片區 */
 .bus-cards-container {
   display: flex;
-  flex-wrap: wrap;            /* 允許換行 */
-  gap: 20px;                  /* 卡片間距 */
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
 }
 
-/* 公車卡片 */
 .bus-card {
-  background-color: #74b8fb;
-  padding: 15px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  flex: 0 1 calc(50% - 10px); /* 每行兩張，留間距 */
+  width: 300px;
+  min-height: 150px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  text-align: left;
   box-sizing: border-box;
-  margin-bottom: 10px;
-}
-
-/* 響應式：螢幕寬度小於 600px 時，每行只顯示一張 */
-@media (max-width: 600px) {
-  .bus-card {
-    flex: 0 1 100%;
-  }
+  color: white; /* 讓文字在深色背景可讀 */
 }
