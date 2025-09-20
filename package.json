@@ -13,6 +13,7 @@
     "axios": "^1.12.2",
     "crypto-js": "^4.2.0",
     "firebase": "^12.3.0",
+    "framer-motion": "^12.23.16",
     "html5-qrcode": "^2.3.8",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.1",
