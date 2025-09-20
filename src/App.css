@@ -21,7 +21,7 @@ body, html, #root, .app-root {
 .home-container, .page-container, .explore-page {
   text-align: center;
   padding: 2rem;
-  padding-bottom: 160px; /* 底部懸浮按鈕空間 */
+  padding-bottom: 10px; /* 底部懸浮按鈕空間 */
 }
 
 /* ====== 主選單格子 ====== */
@@ -145,12 +145,13 @@ body, html, #root, .app-root {
 .bottom-buttons {
   position: sticky;
   bottom: 20px;
+  margin-top: auto;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 1rem;
   padding: 10px 20px;
-  width: 300px; 
+  width: 30vh; 
   max-width: 90%;
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.9); 
