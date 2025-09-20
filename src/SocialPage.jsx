@@ -3,9 +3,19 @@ import TaskList from "./components/TaskList";
 
 function SocialPage({ lang }) {
   const tasks_zh = [
-    { id: 1, text: "找同梯喝咖啡", point: 10 },
-    { id: 2, text: "午餐一起吃", point: 10 },
+    { id: 1, text: "找同事喝咖啡(掃描QRCODE以完成任務)", point: 10 },
+    { id: 2, text: "和同事吃午餐(掃描QRCODE以完成任務)", point: 10 },
     { id: 3, text: "共用辦公設備", point: 10 },
+    { id: 4, text: "一起參加公司活動", point: 20 },
+    { id: 5, text: "認識實習生(掃描QRCODE以完成任務)連結gmail", point: 20 },
+    { id: 6, text: "分享工作經驗", point: 15 },
+    { id: 7, text: "參與團隊會議並提出建議", point: 15 },
+    { id: 8, text: "組織團隊建設活動", point: 25 },
+    { id: 9, text: "參加公司志願者活動", point: 30 },
+    { id: 10, text: "推薦優秀人才加入公司", point: 50 },
+    { id: 11, text: "與同事合作完成專案", point: 40 },
+    { id: 12, text: "參加跨部門合作", point: 35 },
+    { id: 13, text: "完成編輯個人檔案", point: 15 },
   ];
   
   const tasks_en = [
