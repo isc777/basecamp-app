@@ -1,48 +1,49 @@
-import { useEffect, useRef, useState } from "react";
-import { Html5Qrcode } from "html5-qrcode";
+import { useEffect, useRef } from "react";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
-export default function QRScanner({ onScan }) {
-  const qrRef = useRef(null);
-  const [scanning, setScanning] = useState(false);
+export default function QRScanner({ onScan, scanning }) {
+  const scannerRef = useRef(null);
 
   useEffect(() => {
-    if (!scanning) return;
-    const qrScanner = new Html5Qrcode("reader");
+    if (!scanning) {
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(() => {});
+      }
+      return;
+    }
 
-    qrScanner
-      .start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-          try {
-            const data = JSON.parse(decodedText);
-            onScan(data);
-            qrScanner.stop();
-            setScanning(false);
-          } catch (e) {
-            console.error("QR Code 不是 JSON 格式", e);
-          }
-        },
-        (errorMessage) => {
-          // console.log(errorMessage)
+    scannerRef.current = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 20,
+        qrbox: { width: 250, height: 250 },
+        rememberLastUsedCamera: true,
+        disableFlip: false,
+      },
+      false
+    );
+
+    scannerRef.current.render(
+      (decodedText) => {
+        try {
+          const data = JSON.parse(decodedText);
+          onScan(data);
+          scannerRef.current.clear();
+        } catch (e) {
+          console.error("QR Code 不是 JSON 格式", e);
         }
-      )
-      .catch((err) => console.error(err));
+      },
+      () => {
+        // 忽略掃描錯誤
+      }
+    );
 
     return () => {
-      qrScanner.stop().catch(() => {});
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(() => {});
+      }
     };
-  }, [scanning]);
+  }, [scanning, onScan]);
 
-  return (
-    <div className="flex flex-col items-center">
-      <button
-        onClick={() => setScanning((prev) => !prev)}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
-      >
-        {scanning ? "關閉掃描" : "開啟相機掃描"}
-      </button>
-      <div id="reader" className="mt-2 w-64 h-64"></div>
-    </div>
-  );
+  return <div id="reader" className="mt-2 w-64 h-64"></div>;
 }
