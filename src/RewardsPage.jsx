@@ -15,6 +15,32 @@ function RewardsPage({ lang }) {
   const { user, profile, setProfile } = useUser(); // Context
   const [redeemedIds, setRedeemedIds] = useState([]);
   const [activeTab, setActiveTab] = useState("progress");
+  const [claimedMilestones, setClaimedMilestones] = useState([]);
+  const milestones = [50, 100, 250, 500]; // 里程碑分數
+
+  // 點擊里程碑寶箱，領取額外獎勵
+  const claimMilestone = async (score) => {
+    if (!user || claimedMilestones.includes(score)) return;
+
+    const rewardPoints = 20; // 額外獎勵分數
+    const userRef = doc(db, "profiles", user.uid);
+    
+    await updateDoc(userRef, {
+      scores: (profile.scores || 0) + rewardPoints,
+      claimedMilestones: [...(profile.claimedMilestones || []), score],
+    });
+
+    setProfile({
+      ...profile,
+      scores: (profile.scores || 0) + rewardPoints,
+      claimedMilestones: [...(profile.claimedMilestones || []), score]
+    });
+
+    setClaimedMilestones([...claimedMilestones, score]);
+
+    alert(`🎉 你獲得額外 ${rewardPoints} 分！`);
+  };
+
 
   // 初次載入：從 Firestore 抓 redeemedIds
   useEffect(() => {
@@ -92,24 +118,50 @@ function RewardsPage({ lang }) {
       {activeTab === "progress" && (
         <div>
           <p>{lang === "zh" ? "你的分數: " : "Your Score: "} {profile?.scores || 0}</p>
-          <div
-            style={{
-              height: 25,
-              width: "100%",
-              backgroundColor: "#eee",
-              borderRadius: 12,
-              overflow: "hidden",
-              marginBottom: 10,
-            }}
-          >
+          
             <div
               style={{
-                width: `${Math.min((profile?.scores || 0) % 30 / 30, 1) * 100}%`,
-                height: "100%",
-                backgroundColor: "#4caf50",
-                transition: "width 0.3s",
+                height: 50,
+                width: 500,
+                backgroundColor: "#eee",
+                borderRadius: 15,
+                overflow: "hidden",
+                marginBottom: 10,
               }}
-            ></div>
+            >
+            <div style={{ position: "relative", height: 50, backgroundColor: "#eee", borderRadius: 15, marginBottom: 20 }}>
+              {/* 進度填充 */}
+              <div style={{
+                width: `${Math.min(profile?.scores / milestones[milestones.length-1], 1) * 100}%`,
+                height: "100%",
+                background: "linear-gradient(90deg, #4caf50, #00e676)",
+                borderRadius: 15,
+                transition: "width 0.5s ease-out",
+              }} />
+
+              {/* 寶箱里程碑 */}
+              {milestones.map((score, i) => {
+                const unlocked = profile?.scores >= score;
+                const claimed = profile?.claimedMilestones?.includes(score); // 是否已經領過
+
+                return (
+                  <span key={i} style={{
+                    position: "absolute",
+                    left: `${Math.min(score / milestones[milestones.length-1], 1) * 100}%`,
+                    top: 0,
+                    transform: "translateX(-80%)",
+                    fontSize: 35,
+                    cursor: unlocked && !claimed ? "pointer" : "default",
+                    color: unlocked && !claimed ? "#FFD700" : "#aaa"
+                  }}
+                  onClick={() => unlocked && !claimed && claimMilestone(score)}>
+                  {/* 狀態顯示 */}
+                  {claimed ? "📦" : "🎁"}
+                  </span>
+                )
+              })}
+            </div>
+
           </div>
         </div>
       )}
