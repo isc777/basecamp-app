@@ -8,19 +8,19 @@
 .info-section {
   margin-bottom: 30px;
   padding: 20px;
-  background-color: #74b8fb;
+  background-color: #dfd25d;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .info-section h1 {
   margin-bottom: 15px;
-  color: hsl(213, 36%, 95%);
+  color: hsl(214, 62%, 5%);
 }
 
 .info-section h2 {
   margin-bottom: 10px;
-  color: #e5eaf0;
+  color: #050a10;
 }
 
 .info-section p,
@@ -37,7 +37,7 @@
 
 /* 公車卡片 */
 .bus-card {
-  background-color: #74b8fb;
+  background-color: #6daef0;
   padding: 15px;
   border-radius: 6px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
