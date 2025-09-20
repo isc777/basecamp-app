@@ -25,7 +25,7 @@ function InfoPage() {
     "橘線": "#e67e22",
     "紫線": "#8e44ad",
     "粉紅線": "#fd79a8",
-    "灰線": "#7f8c8d"
+    "灰線": "#aab7b8ff"
   };
 
   return (
