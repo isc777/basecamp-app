@@ -122,6 +122,8 @@ function RewardsPage({ lang }) {
           
             <div
               style={{
+                alignItems: "center",
+                padding: "1px 10px",
                 height: 50,
                 width: 500,
                 backgroundColor: "#eee",
@@ -153,7 +155,7 @@ function RewardsPage({ lang }) {
                       left: `${Math.min(score / milestones[milestones.length - 1], 1) * 100}%`,
                       top: 0,
                       transform: "translateX(-80%)",
-                      fontSize: 35,
+                      fontSize: 25,
                       cursor: unlocked ? "pointer" : "default",
                     }}
                     whileHover={unlocked && !claimed ? { scale: 1.3, rotate: -5 } : {}}
