@@ -34,6 +34,7 @@
   transition: 0.2s;
   color: white;
   filter: brightness(0.7); /* 變亮 */
+  justify-content: center;
 }
 
 /* 按鈕顏色對應路線 */
@@ -44,6 +45,7 @@
 .route-btn[data-route="橘線"] { background-color: #e67e22; border-color: #ca6f1e; }
 .route-btn[data-route="紫線"] { background-color: #8e44ad; border-color: #6c3483; }
 .route-btn[data-route="粉紅線"] { background-color: #fd79a8; border-color: #e84393; }
+.route-btn[data-route="灰線"] { background-color: #7f8c8d; border-color: #626567; }
 
 /* 選取按鈕變淺色 */
 .route-btn.active {
@@ -67,8 +69,8 @@
 }
 /* 卡片 */
 .bus-card {
-  width: 250px;
-  height: 250px;             
+  width: 35vh;
+  height: 35vh;             
   padding: 16px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);

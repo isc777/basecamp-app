@@ -10,7 +10,7 @@
   font-size: 20px;
   line-height: 1.5;
   font-family: "Noto Sans TC", "Segoe UI", Arial, sans-serif;
-  width: 50vh; /* 固定寬度 */
+  width: 40vh; /* 固定寬度 */
   min-height: 120px; /* 固定最小高度 */
   box-sizing: border-box;
 }
