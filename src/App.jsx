@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
+import MailboxPage from "./MailboxPage"; // 你的信箱頁面元件
 
 // ====== 資料 ======
 const menuItems = {
@@ -85,7 +86,7 @@ function Home({ lang }) {
   );
 }
 
-// ====== 子頁模板 ======
+// ====== 通用任務頁 ======
 function Page({ lang, title }) {
   const tasks = lang === "zh" ? tasks_zh : tasks_en;
   const [score, setScore] = useState(() => parseInt(localStorage.getItem("score")) || 0);
@@ -94,16 +95,10 @@ function Page({ lang, title }) {
     localStorage.setItem("score", score);
   }, [score]);
 
-  const handleComplete = (task) => setScore(score + task.point);
-
-  const navigate = useNavigate();
+  const handleComplete = (task) => setScore(prev => prev + task.point);
 
   return (
     <div className="page-container">
-      <button className="home-button" onClick={() => navigate("/")}>
-        {lang === "zh" ? "🏠 主頁" : "🏠 Home"}
-      </button>
-
       <h2>{title}</h2>
       <p>{lang === "zh" ? "分數" : "Score"}: {score}</p>
       <TaskList tasks={tasks} onComplete={handleComplete} />
@@ -118,36 +113,50 @@ function Page({ lang, title }) {
   );
 }
 
-// ====== App 主組件 ======
-function App() {
-  const [lang, setLang] = useState("zh");
-
+// ====== 公司資訊頁 ======
+function Info({ lang }) {
   return (
-    <div className="app-root">
+    <div className="page-container">
+      <h2>{lang === "zh" ? "認識公司資訊" : "Company Info"}</h2>
+      <p>{lang === "zh" ? "這裡可以放公司介紹、規章與公告" : "Company introduction, rules, announcements"}</p>
+      <Link to="/mailbox" className="menu-button">
+        {lang === "zh" ? "開通信箱" : "Open Mailbox"}
+      </Link>
+    </div>
+  );
+}
+
+// ====== 設定頁 ======
+function Settings({ lang, setLang }) {
+  return (
+    <div className="page-container">
       <button
         className="lang-button"
         onClick={() => setLang(lang === "zh" ? "en" : "zh")}
       >
         {lang === "zh" ? "切換到 English" : "Switch to 中文"}
       </button>
-
-      <Routes>
-        <Route path="/" element={<Home lang={lang} />} />
-        <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
-        <Route path="/info" element={<Page lang={lang} title={lang === "zh" ? "認識公司資訊" : "Company Info"} />} />
-        <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
-        <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
-        <Route path="/settings" element={<Page lang={lang} title={lang === "zh" ? "設定與個人資訊" : "Settings & Profile"} />} />
-      </Routes>
     </div>
   );
 }
 
-// ====== App Wrapper ======
-export default function AppWrapper() {
+// ====== App 元件 ======
+function App() {
+  const [lang, setLang] = useState("zh");
+
   return (
     <Router>
-      <App />
+      <Routes>
+        <Route path="/" element={<Home lang={lang} />} />
+        <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
+        <Route path="/info" element={<Info lang={lang} />} />
+        <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
+        <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
+        <Route path="/settings" element={<Settings lang={lang} setLang={setLang} />} />
+        <Route path="/mailbox" element={<MailboxPage />} />
+      </Routes>
     </Router>
   );
 }
+
+export default App;
