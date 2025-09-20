@@ -7,9 +7,18 @@
   color: black;
 
   /* 中英文統一字體大小 */
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.5;
   font-family: "Noto Sans TC", "Segoe UI", Arial, sans-serif;
+  width: 50vh; /* 固定寬度 */
+  min-height: 120px; /* 固定最小高度 */
+  box-sizing: border-box;
+}
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
 }
 
 /* hover 效果 */
