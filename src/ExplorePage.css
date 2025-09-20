@@ -1,0 +1,26 @@
+.explore-page {
+  padding: 20px;
+  font-family: "Noto Sans TC", sans-serif;
+}
+
+.category-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.category-btn {
+  padding: 8px 12px;
+  border: 1px solid #170b17;
+  background: rgb(212, 14, 140);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.category-btn.active {
+  background: #800080;
+  color: white;
+}
+
+

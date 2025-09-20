@@ -93,11 +93,14 @@ body, html, #root, .app-root {
   cursor: not-allowed;
 }
 
-/* 固定底部按鈕容器 */
-.bottom-buttons {
-  position: fixed;
-  bottom: 0;
+/* 背景與自適應高度 */
+body, html, #root, .app-root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;      /* 最少填滿視窗高度 */
   width: 100%;
+  background-color: gray;  /* 背景色 */
+  font-family: sans-serif;
   display: flex;
   justify-content: space-between;
   padding: 10px 20px;

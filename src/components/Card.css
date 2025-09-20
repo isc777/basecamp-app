@@ -1,0 +1,32 @@
+.card {
+  padding: 16px;
+  border-radius: 12px;
+  margin: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15); /* 投影讓它浮起來 */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: black;
+}
+
+/* hover 效果 */
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 各類別底色 + 邊框 */
+.card.office {
+  background: #E8F0FE;
+  border: 2px solid #4285F4;
+}
+.card.sport {
+  background: #E6F4EA;
+  border: 2px solid #34A853;
+}
+.card.leisure {
+  background: #F3E8FF;
+  border: 2px solid #A142F4;
+}
+.card.food {
+  background: #FFF4E5;
+  border: 2px solid #FBBC05;
+}
