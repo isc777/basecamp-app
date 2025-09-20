@@ -134,7 +134,7 @@ function RewardsPage({ lang }) {
             <div style={{ position: "relative", height: 50, backgroundColor: "#eee", borderRadius: 15, marginBottom: 20 }}>
               {/* 進度填充 */}
               <div style={{
-                width: `${Math.min(profile?.scores / milestones[milestones.length-1], 1) * 100}%`,
+                width: `${Math.min(profile?.scores || 0 / milestones[milestones.length-1], 1) * 100}%`,
                 height: "100%",
                 background: "linear-gradient(90deg, #4caf50, #00e676)",
                 borderRadius: 15,
