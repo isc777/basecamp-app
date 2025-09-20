@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import TaskList from "./components/TaskList";
+import { useUser } from "./contexts/UserContext";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "./firebase";
 
 function SocialPage({ lang }) {
+  const { user, profile, setProfile } = useUser(); // 用 Context 取得目前登入使用者＋profile
+
   const tasks_zh = [
     { id: 1, text: "找同事喝咖啡(掃描QRCODE以完成任務)", point: 10 },
     { id: 2, text: "和同事吃午餐(掃描QRCODE以完成任務)", point: 10 },
@@ -17,40 +22,55 @@ function SocialPage({ lang }) {
     { id: 12, text: "參加跨部門合作", point: 35 },
     { id: 13, text: "完成編輯個人檔案", point: 15 },
   ];
-  
+
   const tasks_en = [
     { id: 1, text: "Have coffee with colleagues", point: 10 },
     { id: 2, text: "Have lunch together", point: 10 },
     { id: 3, text: "Share office equipment", point: 10 },
   ];
-  
+
   const tasks = lang === "zh" ? tasks_zh : tasks_en;
 
-  const [score, setScore] = useState(
-    () => parseInt(localStorage.getItem("score")) || 0
-  );
-  const [completedIds, setCompletedIds] = useState(() => {
-    const saved = localStorage.getItem("completedIds");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [activeTab, setActiveTab] = useState("tasks"); // "tasks" 或 "completed"
+  const [completedIds, setCompletedIds] = useState(profile?.completedIds || []);
+  const [activeTab, setActiveTab] = useState("tasks");
 
+  // 🔹Profile 有變化時，同步 completedIds
   useEffect(() => {
-    localStorage.setItem("score", score);
-    localStorage.setItem("completedIds", JSON.stringify(completedIds));
-  }, [score, completedIds]);
+    setCompletedIds(profile?.completedIds || []);
+  }, [profile]);
 
-  const handleComplete = (task) => {
-    if (!completedIds.includes(task.id)) {
-      setScore((prev) => prev + task.point);
-      setCompletedIds((prev) => [...prev, task.id]);
-    }
+  // 🔹完成任務
+  const handleComplete = async (task) => {
+    if (!user || !profile) return;
+    if (completedIds.includes(task.id)) return;
+
+    const newScore = (profile.scores || 0) + task.point;
+    const newCompletedIds = [...completedIds, task.id];
+
+    // 更新 Firestore → profiles collection
+    const userRef = doc(db, "profiles", user.uid);
+    await updateDoc(userRef, {
+      scores: newScore,
+      completedIds: newCompletedIds,
+    });
+
+    // 更新 Context → 讓畫面同步刷新
+    setProfile({
+      ...profile,
+      scores: newScore,
+      completedIds: newCompletedIds,
+    });
+
+    // 更新本地 state
+    setCompletedIds(newCompletedIds);
   };
 
   return (
     <div className="page-container" style={{ textAlign: "center" }}>
       <h2>{lang === "zh" ? "社交任務" : "Social Tasks"}</h2>
-      <p>{lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}</p>
+      <p>
+        {lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}
+      </p>
 
       {/* Tab 按鈕 */}
       <div style={{ marginBottom: "20px" }}>
@@ -86,17 +106,17 @@ function SocialPage({ lang }) {
       {/* Tab 內容 */}
       {activeTab === "completed" && (
         <TaskList
-          tasks={tasks.filter(task => completedIds.includes(task.id))} // 只顯示已完成的任務
+          tasks={tasks.filter((task) => completedIds.includes(task.id))}
           completedIds={completedIds}
-          onComplete={() => {}} // 已完成任務不可再完成
+          onComplete={() => {}}
         />
       )}
 
       {activeTab === "tasks" && (
         <TaskList
-          tasks={tasks.filter(task => !completedIds.includes(task.id))} // 只顯示未完成任務
+          tasks={tasks.filter((task) => !completedIds.includes(task.id))}
           completedIds={completedIds}
-          onComplete={handleComplete} // 點完成就會加分並加入 completedIds
+          onComplete={handleComplete}
         />
       )}
     </div>

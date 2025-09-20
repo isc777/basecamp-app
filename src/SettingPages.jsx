@@ -171,7 +171,7 @@ export default function SettingPage({ lang = "zh" }) {
             {renderField("factory", "factory")}
             {renderField("phone", "phone", "tel")}
             {renderField("birthday", "birthday", "date")}
-            {<p>🏆 積分: {profile?.scores || "xx"}</p>}
+            {<p>🏆 積分: {profile?.scores}</p>}
           </div>
           <button
             onClick={handleLogout}
