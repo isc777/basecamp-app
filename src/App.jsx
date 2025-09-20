@@ -27,22 +27,6 @@ const menuItems = {
   ],
 };
 
-const tasks_zh = [
-  { title: "開通信箱", point: 10 },
-  { title: "掃描 QR code 完成探索任務", point: 15 },
-  { title: "找同梯吃飯", point: 20 },
-  { title: "參加新人說明會", point: 30 },
-  { title: "兌換咖啡券", point: 10 },
-];
-
-const tasks_en = [
-  { title: "Open mailbox", point: 10 },
-  { title: "Scan QR code to complete exploration", point: 15 },
-  { title: "Have lunch with a colleague", point: 20 },
-  { title: "Join orientation meeting", point: 30 },
-  { title: "Redeem coffee coupon", point: 10 },
-];
-
 // ====== 任務列表元件 ======
 function TaskList({ tasks, onComplete }) {
   const [completed, setCompleted] = useState(
@@ -78,14 +62,29 @@ function TaskList({ tasks, onComplete }) {
 // ====== 主頁元件 ======
 function Home({ lang }) {
   const items = menuItems[lang];
+
+  // 分排 2-2-1
+  const rows = [
+    { title: lang === "zh" ? "公司生活" : "Company Life", items: items.slice(0, 2) },
+    { title: lang === "zh" ? "社交獎勵" : "Social & Rewards", items: items.slice(2, 4) },
+    { title: lang === "zh" ? "設定" : "Settings", items: items.slice(4, 5) },
+  ];
+
   return (
     <div className="home-container">
       <h1>BaseCamp</h1>
-      <div className="menu-grid">
-        {items.map((item, idx) => (
-          <Link key={idx} to={item.path} className="menu-button">
-            {item.title}
-          </Link>
+      <div className="menu-container">
+        {rows.map((row, idx) => (
+          <div key={idx} className="menu-row-wrapper">
+            <div className="menu-row-title">{row.title}</div>
+            <div className="menu-row">
+              {row.items.map((item, i) => (
+                <Link key={i} to={item.path} className="menu-button">
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -93,8 +92,7 @@ function Home({ lang }) {
 }
 
 // ====== 通用任務頁 ======
-function Page({ lang, title }) {
-  const tasks = lang === "zh" ? tasks_zh : tasks_en;
+function Page({ lang, title, tasks }) {
   const [score, setScore] = useState(() => parseInt(localStorage.getItem("score")) || 0);
 
   useEffect(() => {

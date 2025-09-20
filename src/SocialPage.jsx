@@ -1,3 +1,4 @@
+// src/SocialPage.jsx
 import React, { useState, useEffect } from "react";
 import TaskList from "./components/TaskList";
 
@@ -17,13 +18,23 @@ function SocialPage({ lang }) {
     { id: 12, text: "參加跨部門合作", point: 35 },
     { id: 13, text: "完成編輯個人檔案", point: 15 },
   ];
-  
+
   const tasks_en = [
     { id: 1, text: "Have coffee with colleagues", point: 10 },
     { id: 2, text: "Have lunch together", point: 10 },
     { id: 3, text: "Share office equipment", point: 10 },
+    { id: 4, text: "Participate in company events", point: 20 },
+    { id: 5, text: "Get to know interns", point: 20 },
+    { id: 6, text: "Share work experience", point: 15 },
+    { id: 7, text: "Attend team meetings and provide suggestions", point: 15 },
+    { id: 8, text: "Organize team-building activities", point: 25 },
+    { id: 9, text: "Join company volunteer activities", point: 30 },
+    { id: 10, text: "Refer talented individuals to join the company", point: 50 },
+    { id: 11, text: "Collaborate with colleagues to complete projects", point: 40 },
+    { id: 12, text: "Participate in cross-departmental collaboration", point: 35 },
+    { id: 13, text: "Complete and edit personal profile", point: 15 },
   ];
-  
+
   const tasks = lang === "zh" ? tasks_zh : tasks_en;
 
   const [score, setScore] = useState(
@@ -50,7 +61,11 @@ function SocialPage({ lang }) {
   return (
     <div className="page-container" style={{ textAlign: "center" }}>
       <h2>{lang === "zh" ? "社交任務" : "Social Tasks"}</h2>
-      <p>{lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}</p>
+      <p>
+        {lang === "zh"
+          ? "完成與同梯互動的任務"
+          : "Complete social tasks with colleagues"}
+      </p>
 
       {/* Tab 按鈕 */}
       <div style={{ marginBottom: "20px" }}>
@@ -86,17 +101,19 @@ function SocialPage({ lang }) {
       {/* Tab 內容 */}
       {activeTab === "completed" && (
         <TaskList
-          tasks={tasks.filter(task => completedIds.includes(task.id))} // 只顯示已完成的任務
+          tasks={tasks}
           completedIds={completedIds}
-          onComplete={() => {}} // 已完成任務不可再完成
+          onComplete={handleComplete}
+          lang={lang}   // 👈 傳遞父層的語言
         />
       )}
 
       {activeTab === "tasks" && (
         <TaskList
-          tasks={tasks.filter(task => !completedIds.includes(task.id))} // 只顯示未完成任務
+          tasks={tasks}
           completedIds={completedIds}
-          onComplete={handleComplete} // 點完成就會加分並加入 completedIds
+          onComplete={handleComplete}
+          lang={lang}   // 👈 傳遞父層的語言
         />
       )}
     </div>
