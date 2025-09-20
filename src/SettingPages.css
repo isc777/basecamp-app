@@ -14,18 +14,19 @@
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  max-width: 800px;
+  max-width: 40vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* 上半部：頭貼 + 資訊 */
-.profile-main {
+/* 上半部：頭貼 + 姓名容器 */
+.profile-header {
   display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center; /* 置中頭貼與姓名 */
+  gap: 12px;
   background-color: #e9e5e5;
   padding: 16px;
   border-radius: 12px;
@@ -34,30 +35,28 @@
 /* 頭貼 */
 .profile-avatar-container {
   flex-shrink: 0;
-  margin: 2px 0;
+  margin: 0;
 }
 .profile-avatar {
-  width: 150px;
-  height: 150px;
+  width: 20vh;
+  height: 20vh;
   border-radius: 50%;
   object-fit: cover;
 }
 
-/* 資訊 */
-.profile-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 18px;
-}
-
-/* 姓名獨立 */
+/* 姓名 */
 .profile-name {
   font-size: 22px;
   font-weight: bold;
   color: #222;
-  margin-top: 6%;
+}
+
+/* 資訊 */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 18px;
 }
 
 /* 統一輸入框樣式 */
@@ -96,7 +95,6 @@
   font-size: 18px;
   margin: 2px 0;
   align-items: center;
-  cursor: pointer;
 }
 .info-label {
   font-weight: bold;
@@ -113,14 +111,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px; /* 按鈕間距 */
   margin-top: 16px;
 }
 
 /* 按鈕統一樣式 */
 .profile-button {
   flex: unset;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
   font-weight: bold;
@@ -135,9 +132,11 @@
 /* 登入按鈕 */
 .login-btn {
   background-color: #4caf50;
+  justify-content: center;
 }
 .login-btn:hover {
   background-color: #45a049;
+  justify-content: center;
 }
 
 /* 綠色按鈕 */
@@ -151,7 +150,9 @@
 /* 紅色按鈕 */
 .profile-button.red {
   background-color: #f44336;
+  justify-content: center;
 }
 .profile-button.red:hover {
   background-color: #da190b;
+  justify-content: center;
 }
