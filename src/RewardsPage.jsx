@@ -123,7 +123,7 @@ function RewardsPage({ lang }) {
             <div
               style={{
                 alignItems: "center",
-                padding: "1px 7px",
+                padding: "1px 10px",
                 height: 50,
                 width: 100,
                 backgroundColor: "#eee",
