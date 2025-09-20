@@ -16,11 +16,16 @@ function InfoPage() {
     );
   };
 
-  const routeColors = ["#65a6e6", "#f7b267", "#f79d84", "#84d9a8", "#d6a2e8"];
-
-  const getColor = (route) => {
-    const index = buses.findIndex((b) => b.route === route);
-    return routeColors[index % routeColors.length];
+  // 路線對應顏色（按鈕 & 卡片）
+  const routeColorMap = {
+    "紅線": "#e74c3c",
+    "綠線": "#27ae60",
+    "藍線": "#2980b9",
+    "黃線": "#f1c40f",
+    "橘線": "#e67e22",
+    "紫線": "#8e44ad",
+    "粉紅線": "#fd79a8",
+    "灰線": "#7f8c8d"
   };
 
   return (
@@ -33,6 +38,7 @@ function InfoPage() {
         {buses.map((bus) => (
           <button
             key={bus.route}
+            data-route={bus.route}       // CSS 顏色對應
             className={`route-btn ${
               selectedRoutes.includes(bus.route) ? "active" : ""
             }`}
@@ -45,33 +51,28 @@ function InfoPage() {
 
       {/* 被選取的公車資訊 */}
       <div className="bus-cards-container">
-        {selectedRoutes.map((route) => {
-          const bus = buses.find((b) => b.route === route);
-          if (!bus) return null;
-          return (
-            <div
-              key={bus.route}
-              className="bus-card"
-              style={{ backgroundColor: getColor(bus.route) }}
-            >
-              <h2>
-                {bus.route}（{bus.start} → {bus.end}）
-              </h2>
-              <p>
-                <strong>營運時間：</strong>
-                {bus.time}
-              </p>
-              <p>
-                <strong>發車間隔：</strong>
-                {bus.interval}
-              </p>
-              <p>
-                <strong>路線描述：</strong>
-                {bus.description}
-              </p>
-            </div>
-          );
-        })}
+        {selectedRoutes.length === 0 ? (
+          <p className="no-selection">
+            點選上方按鈕以獲路線資訊
+          </p>
+        ) : (
+          selectedRoutes.map((route) => {
+            const bus = buses.find((b) => b.route === route);
+            if (!bus) return null;
+            return (
+              <div
+                key={bus.route}
+                className="bus-card"
+                data-route={bus.route}     // CSS 顏色對應
+              >
+                <h2>{bus.route}（{bus.start} → {bus.end}）</h2>
+                <p><strong>營運時間：</strong>{bus.time}</p>
+                <p><strong>發車間隔：</strong>{bus.interval}</p>
+                <p><strong>路線描述：</strong>{bus.description}</p>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
