@@ -89,13 +89,14 @@ function RewardsPage({ lang }) {
         <button
           onClick={() => setActiveTab("progress")}
           style={{
-            marginRight: 10,
+            marginRight: "10px",
             backgroundColor: activeTab === "progress" ? "#4caf50" : "#eee",
             color: activeTab === "progress" ? "#fff" : "#000",
-            padding: "8px 16px",
+            padding: "40px 60px",
             border: "none",
             borderRadius: 6,
             cursor: "pointer",
+            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "分數進度" : "Progress"}
@@ -105,10 +106,11 @@ function RewardsPage({ lang }) {
           style={{
             backgroundColor: activeTab === "list" ? "#4caf50" : "#eee",
             color: activeTab === "list" ? "#fff" : "#000",
-            padding: "8px 16px",
+            padding: "40px 60px",
             border: "none",
             borderRadius: 6,
             cursor: "pointer",
+            fontSize: "24px",
           }}
         >
           {lang === "zh" ? "可兌換獎勵" : "Reward List"}
@@ -117,61 +119,50 @@ function RewardsPage({ lang }) {
 
       {/* Progress Tab */}
       {activeTab === "progress" && (
-        <div>
+        <div style={{ textAlign: "center" }}> {/* 外層置中 */}
           <p>{lang === "zh" ? "你的分數: " : "Your Score: "} {profile?.scores || 0}</p>
           
-            <div
-              style={{
-                height: 50,
-                width: 500,
-                backgroundColor: "#eee",
-                borderRadius: 15,
-                overflow: "hidden",
-                marginBottom: 10,
-              }}
-            >
-            <div style={{ position: "relative", height: 50, backgroundColor: "#eee", borderRadius: 15, marginBottom: 20 }}>
-              {/* 進度填充 */}
-              <div style={{
-                width: `${Math.min(profile?.scores / milestones[milestones.length-1], 1) * 100}%`,
-                height: "100%",
-                background: "linear-gradient(90deg, #4caf50, #00e676)",
-                borderRadius: 15,
-                transition: "width 0.5s ease-out",
-              }} />
+          <div style={{ display: "inline-block", width: "60vh", height: 70, backgroundColor: "#eee", borderRadius: 15, overflow: "hidden", marginBottom: 20, position: "relative" }}>
+            
+            {/* 進度填充 */}
+            <div style={{
+              width: `${Math.min(profile?.scores / milestones[milestones.length-1], 1) * 100}%`,
+              height: "100%",
+              background: "linear-gradient(90deg, #4caf50, #00e676)",
+              borderRadius: 15,
+              transition: "width 0.5s ease-out",
+            }} />
 
-              {/* 寶箱里程碑 */}
-              {milestones.map((score, i) => {
-                const unlocked = profile?.scores >= score;
-                const claimed = profile?.claimedMilestones?.includes(score); // 是否已經領過
+            {/* 寶箱里程碑 */}
+            {milestones.map((score, i) => {
+              const unlocked = profile?.scores >= score;
+              const claimed = profile?.claimedMilestones?.includes(score);
 
-                return (
-                  <motion.span
-                    key={i}
-                    style={{
-                      position: "absolute",
-                      left: `${Math.min(score / milestones[milestones.length - 1], 1) * 100}%`,
-                      top: 0,
-                      transform: "translateX(-80%)",
-                      fontSize: 35,
-                      cursor: unlocked ? "pointer" : "default",
-                    }}
-                    whileHover={unlocked && !claimed ? { scale: 1.3, rotate: -5 } : {}}
-                    whileTap={unlocked && !claimed ? { scale: 0.9 } : {}}
-                    animate={claimed ? { scale: [1.2, 0.8, 1], rotate: [0, 10, -10, 0] } : {}}
-                    transition={{ duration: 0.5 }}
-                    onClick={() => unlocked && !claimed && claimMilestone(score)}
-                  >
-                  {/* 狀態顯示 */}
+              return (
+                <motion.span
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    left: `${Math.min(score / milestones[milestones.length - 1], 1) * 100}%`,
+                    top: 0,
+                    transform: "translateX(-50%)",
+                    fontSize: 35,
+                    cursor: unlocked ? "pointer" : "default",
+                  }}
+                  whileHover={unlocked && !claimed ? { scale: 1.3, rotate: -5 } : {}}
+                  whileTap={unlocked && !claimed ? { scale: 0.9 } : {}}
+                  animate={claimed ? { scale: [1.2, 0.8, 1], rotate: [0, 10, -10, 0] } : {}}
+                  transition={{ duration: 0.5 }}
+                  onClick={() => unlocked && !claimed && claimMilestone(score)}
+                >
                   {claimed ? "📦" : "🎁"}
-                  </motion.span>
-                )
-              })}
-            </div>
-
+                </motion.span>
+              )
+            })}
           </div>
         </div>
       )}
+
 
       {/* Reward List Tab */}
       {activeTab === "list" && (
