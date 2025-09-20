@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import busData from "./data/busData.json"; // 公車資料
+import busData from "./data/BusData.json"; // 公車資料
 import "./InfoPage.css";
 
 function InfoPage() {
