@@ -37,7 +37,7 @@ export default function SettingPage({ lang = "zh" }) {
   const [profile, setProfile] = useState(null);
   const [editingField, setEditingField] = useState(null);
   const [showQRCode, setShowQRCode] = useState(false);
-  const [scannedData, setScannedData] = useState(null);
+  const [scanning, setScanning] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -153,8 +153,24 @@ export default function SettingPage({ lang = "zh" }) {
               {showQRCode ? "隱藏 QR Code" : "產生 QR Code"}
             </button>
             {showQRCode && <UserQRCode profile={profile} />}
-            <QRScanner onScan={setScannedData} />
-            {scannedData && <pre className="scan-result">{JSON.stringify(scannedData, null, 2)}</pre>}
+
+            {/* 這裡的按鈕完全可以自己設計 */}
+            <button
+              onClick={() => setScanning((prev) => !prev)}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg"
+            >
+              {scanning ? "停止掃描" : "開始掃描"}
+            </button>
+
+            {/* 掃描器元件 */}
+            <QRScanner
+              scanning={scanning}
+              onScan={(data) => {
+                console.log("掃描結果：", data);
+                setScanning(false);
+              }}
+            />
+
             <button onClick={handleLogout}>{texts[lang].logoutBtn}</button>
 
           </div>
