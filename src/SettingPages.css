@@ -14,7 +14,7 @@
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  max-width: 100vh;
+  max-width: 800px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -27,6 +27,8 @@
   gap: 16px;
   align-items: flex-start;
   background-color: #e9e5e5;
+  padding: 16px;
+  border-radius: 12px;
 }
 
 /* 頭貼 */
@@ -47,32 +49,35 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 20px;
+  font-size: 18px;
 }
 
+/* 姓名獨立 */
 .profile-name {
   font-size: 22px;
-  padding: 4px 8px;
-  border-radius: 2px;
+  font-weight: bold;
+  color: #222;
   margin-top: 6%;
 }
-/*
+
+/* 統一輸入框樣式 */
 .profile-info input,
-.profile-name input {
-    position: fixed;
-  width: 120px;          
-  padding: 4px 8px;      
-  font-size: 18px;       
+.profile-name input,
+.info-row input {
+  width: 120px;          /* 輸入框寬度 */
+  padding: 6px 8px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: #f9f9f9; 
+  background-color: #f9f9f9; /* 淺色背景 */
   color: #333;
   outline: none;
   transition: all 0.2s ease-in-out;
-}*/
-
+  box-sizing: border-box;
+}
 .profile-info input:focus,
-.profile-name input:focus {
+.profile-name input:focus,
+.info-row input:focus {
   border-color: #4caf50;
   background-color: #fff;
 }
@@ -86,65 +91,64 @@
 
 /* 資料列 */
 .info-row {
-  position: relative;  /* input 絕對定位參考 */
   display: flex;
   gap: 8px;
   font-size: 18px;
+  margin: 2px 0;
   align-items: center;
   cursor: pointer;
 }
-
 .info-label {
   font-weight: bold;
-  min-width: 60px;
   color: #333;
+  min-width: 60px;
 }
-
 .info-value {
   flex: 1;
   color: #555;
 }
 
-.info-row input {
-  position: absolute;
-  left: 70px;       /* 調整與 label 對齊 */
-  top: -5px;       /* 微調垂直位置 */
-  width: 120px;
-  padding: 2px 8px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 2px solid #4caf50;
-  background-color: #fff;
-  color: #333;
-  outline: none;
-  box-sizing: border-box;
-  line-height: 1.5;
-  z-index: 10;
-}
-
 /* 按鈕列 */
 .profile-actions {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px; /* 按鈕間距 */
+  margin-top: 16px;
 }
 
+/* 按鈕統一樣式 */
 .profile-button {
-  flex: 1;
-  padding: 10px;
+  flex: unset;
+  padding: 8px 16px;
   border: none;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
   color: white;
+  font-size: 16px;
   transition: all 0.2s;
+  min-width: 140px;
+  text-align: center;
 }
+
+/* 登入按鈕 */
+.login-btn {
+  background-color: #4caf50;
+}
+.login-btn:hover {
+  background-color: #45a049;
+}
+
+/* 綠色按鈕 */
 .profile-button.green {
   background-color: #4caf50;
 }
 .profile-button.green:hover {
   background-color: #45a049;
 }
+
+/* 紅色按鈕 */
 .profile-button.red {
   background-color: #f44336;
 }

@@ -166,34 +166,38 @@ export default function SettingPage({ lang = "zh" }) {
 
           {/* 底部按鈕 */}
           <div className="profile-actions">
-            <button className="profile-button green" onClick={() => setShowQRCode((prev) => !prev)}>
-              {showQRCode ? "隱藏 QR Code" : "產生 QR Code"}
-            </button>
+            {!user ? (
+              <button className="profile-button green login-btn" onClick={handleLogin}>
+                {texts[lang].loginBtn}
+              </button>
+            ) : (
+              <>
+                <button className="profile-button green" onClick={() => setShowQRCode((prev) => !prev)}>
+                  {showQRCode ? "隱藏 QR Code" : "產生 QR Code"}
+                </button>
 
-            {showQRCode && <UserQRCode profile={profile} />}
+                {showQRCode && <UserQRCode profile={profile} />}
+{/*
+                <button
+                  className="profile-button green"
+                  onClick={() => setScanning((prev) => !prev)}
+                >
+                  {scanning ? "停止掃描" : "開始掃描"}
+                </button> 
+*/}
+                <QRScanner
+                  scanning={scanning}
+                  onScan={(data) => {
+                    console.log("掃描結果：", data);
+                    setScanning(false);
+                  }}
+                />
 
-            {/* 這裡的按鈕完全可以自己設計 */}
-            <button
-              onClick={() => setScanning((prev) => !prev)}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg"
-            >
-              {scanning ? "停止掃描" : "開始掃描"}
-            </button>
-
-            {/* 掃描器元件 */}
-            <QRScanner
-              scanning={scanning}
-              onScan={(data) => {
-                console.log("掃描結果：", data);
-                setScanning(false);
-              }}
-            />
-
-            <button onClick={handleLogout}>{texts[lang].logoutBtn}</button>
-
-            <button className="profile-button red" onClick={handleLogout}>
-              {texts[lang].logoutBtn}
-            </button>
+                <button className="profile-button red" onClick={handleLogout}>
+                  {texts[lang].logoutBtn}
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
