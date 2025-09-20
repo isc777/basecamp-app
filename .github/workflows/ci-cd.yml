@@ -3,26 +3,41 @@ name: Node.js CI/CD
 on:
   push:
     branches:
-      - main
+      - main   # 監控 main 分支
   pull_request:
     branches:
       - main
 
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # 1️⃣ 取得 repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      # 2️⃣ 設定 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20  # Vite 7 要求 >=20.19
 
-    - name: Install dependencies
-      run: npm install
+      # 3️⃣ 安裝依賴
+      - name: Install dependencies
+        run: npm install
 
-    - name: Build project
-      run: npm run build
+      # 4️⃣ Build
+      - name: Build project
+        run: npm run build
+
+      # 5️⃣ 生成 404.html（讓 React Router 刷新頁面不會 404）
+      - name: Copy index.html to 404.html
+        run: cp dist/index.html dist/404.html
+
+      # 6️⃣ 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
