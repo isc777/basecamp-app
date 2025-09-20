@@ -2,22 +2,42 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 
-// 假資料：中英文任務
+// ====== 資料 ======
+const menuItems = {
+  zh: [
+    { title: "探索公司環境", path: "/explore" },
+    { title: "認識公司資訊", path: "/info" },
+    { title: "社交任務", path: "/social" },
+    { title: "獎勵兌換", path: "/rewards" },
+    { title: "設定與個人資訊", path: "/settings" },
+  ],
+  en: [
+    { title: "Explore Environment", path: "/explore" },
+    { title: "Company Info", path: "/info" },
+    { title: "Social Tasks", path: "/social" },
+    { title: "Rewards", path: "/rewards" },
+    { title: "Settings & Profile", path: "/settings" },
+  ],
+};
+
+// 假任務
 const tasks_zh = [
   { title: "開通信箱", point: 10 },
   { title: "掃描 QR code 完成探索任務", point: 15 },
   { title: "找同梯吃飯", point: 20 },
-  { title: "參加新人說明會", point: 30 }
+  { title: "參加新人說明會", point: 30 },
+  { title: "兌換咖啡券", point: 10 },
 ];
 
 const tasks_en = [
   { title: "Open mailbox", point: 10 },
   { title: "Scan QR code to complete exploration", point: 15 },
   { title: "Have lunch with a colleague", point: 20 },
-  { title: "Join orientation meeting", point: 30 }
+  { title: "Join orientation meeting", point: 30 },
+  { title: "Redeem coffee coupon", point: 10 },
 ];
 
-// 任務列表元件
+// ====== 任務列表元件 ======
 function TaskList({ tasks, onComplete }) {
   const [completed, setCompleted] = useState(
     () => JSON.parse(localStorage.getItem("completedTasks")) || []
@@ -42,54 +62,49 @@ function TaskList({ tasks, onComplete }) {
           onClick={() => toggleTask(task)}
           disabled={completed.includes(task.title)}
         >
-          {completed.includes(task.title) ? "✅" : "⬜"} {task.title} ({task.point} pts)
+          {completed.includes(task.title) ? "✅" : "⬜"} {task.title}
         </button>
       ))}
     </div>
   );
 }
 
-// 子頁面元件
-function Explore({ lang }) {
+// ====== 主頁元件 ======
+function Home({ lang }) {
+  const items = menuItems[lang];
+  return (
+    <div className="home-container">
+      <h1>TSMC BaseCamp</h1>
+      <div className="menu-grid">
+        {items.map((item, idx) => (
+          <Link key={idx} to={item.path} className="menu-button">
+            {item.title}
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ====== 子頁模板 ======
+function Page({ lang, title }) {
   const tasks = lang === "zh" ? tasks_zh : tasks_en;
   const [score, setScore] = useState(() => parseInt(localStorage.getItem("score")) || 0);
 
-  const handleComplete = (task) => {
-    setScore(score + task.point);
-  };
+  useEffect(() => {
+    localStorage.setItem("score", score);
+  }, [score]);
+
+  const handleComplete = (task) => setScore(score + task.point);
 
   return (
     <div className="page-container">
-      <h2>{lang === "zh" ? "探索公司環境" : "Company Exploration"}</h2>
-      <TaskList tasks={tasks} onComplete={handleComplete} />
+      <h2>{title}</h2>
       <p>{lang === "zh" ? "分數" : "Score"}: {score}</p>
-    </div>
-  );
-}
-
-function Social({ lang }) {
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "社交任務" : "Social Tasks"}</h2>
-      <p>{lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}</p>
-    </div>
-  );
-}
-
-function Rewards({ lang }) {
-  const [score, setScore] = useState(() => parseInt(localStorage.getItem("score")) || 0);
-
-  const redeem = () => {
-    alert(lang === "zh" ? "🎉 兌換成功！" : "🎉 Redeemed!");
-  };
-
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "獎勵兌換" : "Reward Redemption"}</h2>
-      <p>{lang === "zh" ? "你的分數: " : "Your Score: "} {score}</p>
+      <TaskList tasks={tasks} onComplete={handleComplete} />
       <button
         className="redeem-button"
-        onClick={redeem}
+        onClick={() => alert(lang === "zh" ? "🎉 兌換成功！" : "🎉 Redeemed!")}
         disabled={score < 30}
       >
         {lang === "zh" ? "兌換獎勵 (需30分)" : "Redeem Reward (30 pts)"}
@@ -98,59 +113,31 @@ function Rewards({ lang }) {
   );
 }
 
-function Info({ lang }) {
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "認識公司資訊" : "Company Info"}</h2>
-      <p>{lang === "zh" ? "這裡可以放公司介紹、規章與公告" : "Company introduction, rules, announcements"}</p>
-    </div>
-  );
-}
-
-function Settings({ lang, setLang }) {
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "設定與個人資訊" : "Settings & Profile"}</h2>
-      <button
-        className="lang-button"
-        onClick={() => setLang(lang === "zh" ? "en" : "zh")}
-      >
-        {lang === "zh" ? "切換到 English" : "Switch to 中文"}
-      </button>
-    </div>
-  );
-}
-
-// 主頁元件
-function Home() {
-  return (
-    <div className="home-container">
-      <h1>TSMC BaseCamp</h1>
-      <div className="menu-grid">
-        <Link to="/explore" className="menu-button">探索公司環境</Link>
-        <Link to="/info" className="menu-button">認識公司資訊</Link>
-        <Link to="/social" className="menu-button">社交任務</Link>
-        <Link to="/rewards" className="menu-button">獎勵兌換</Link>
-        <Link to="/settings" className="menu-button">設定與個人資訊</Link>
-      </div>
-    </div>
-  );
-}
-
-// App 元件
+// ====== App 主組件 ======
 function App() {
   const [lang, setLang] = useState("zh");
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore lang={lang} />} />
-        <Route path="/info" element={<Info lang={lang} />} />
-        <Route path="/social" element={<Social lang={lang} />} />
-        <Route path="/rewards" element={<Rewards lang={lang} />} />
-        <Route path="/settings" element={<Settings lang={lang} setLang={setLang} />} />
-      </Routes>
+      <div className="page-container">
+        {/* 語言切換按鈕 */}
+        <button
+          className="lang-button"
+          onClick={() => setLang(lang === "zh" ? "en" : "zh")}
+        >
+          {lang === "zh" ? "切換到 English" : "Switch to 中文"}
+        </button>
+
+        {/* 路由 */}
+        <Routes>
+          <Route path="/" element={<Home lang={lang} />} />
+          <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
+          <Route path="/info" element={<Page lang={lang} title={lang === "zh" ? "認識公司資訊" : "Company Info"} />} />
+          <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
+          <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
+          <Route path="/settings" element={<Page lang={lang} title={lang === "zh" ? "設定與個人資訊" : "Settings & Profile"} />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
