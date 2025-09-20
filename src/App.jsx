@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 import MailboxPage from "./MailboxPage"; // 你的信箱頁面元件
+import InfoPage from "./InfoPage"; // 你的公司資訊頁面元件
+import ExplorePage from "./ExplorePage"; // 你的探索頁面元件
+import SocialPage from "./SocialPage"; // 你的社交任務頁面元件
+import RewardsPage from "./RewardsPage"; // 你的獎勵頁面元件
+import SettingPage from "./SettingPages"; // 你的設定頁面元件
 
 // ====== 資料 ======
 const menuItems = {
@@ -74,7 +79,7 @@ function Home({ lang }) {
   const items = menuItems[lang];
   return (
     <div className="home-container">
-      <h1>TSMC BaseCamp</h1>
+      <h1>BaseCamp</h1>
       <div className="menu-grid">
         {items.map((item, idx) => (
           <Link key={idx} to={item.path} className="menu-button">
@@ -113,19 +118,6 @@ function Page({ lang, title }) {
   );
 }
 
-// ====== 公司資訊頁 ======
-function Info({ lang }) {
-  return (
-    <div className="page-container">
-      <h2>{lang === "zh" ? "認識公司資訊" : "Company Info"}</h2>
-      <p>{lang === "zh" ? "這裡可以放公司介紹、規章與公告" : "Company introduction, rules, announcements"}</p>
-      <Link to="/mailbox" className="menu-button">
-        {lang === "zh" ? "開通信箱" : "Open Mailbox"}
-      </Link>
-    </div>
-  );
-}
-
 // ====== 設定頁 ======
 function Settings({ lang, setLang }) {
   return (
@@ -148,11 +140,11 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home lang={lang} />} />
-        <Route path="/explore" element={<Page lang={lang} title={lang === "zh" ? "探索公司環境" : "Explore Environment"} />} />
-        <Route path="/info" element={<Info lang={lang} />} />
-        <Route path="/social" element={<Page lang={lang} title={lang === "zh" ? "社交任務" : "Social Tasks"} />} />
-        <Route path="/rewards" element={<Page lang={lang} title={lang === "zh" ? "獎勵兌換" : "Rewards"} />} />
-        <Route path="/settings" element={<Settings lang={lang} setLang={setLang} />} />
+        <Route path="/explore" element={<ExplorePage lang={lang} />} />
+        <Route path="/info" element={<InfoPage lang={lang} />} />
+        <Route path="/social" element={<SocialPage lang={lang} />} />
+        <Route path="/rewards" element={<RewardsPage lang={lang} />} />
+        <Route path="/settings" element={<SettingPage lang={lang} />} />
         <Route path="/mailbox" element={<MailboxPage />} />
       </Routes>
     </Router>
