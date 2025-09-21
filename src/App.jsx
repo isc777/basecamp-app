@@ -87,7 +87,7 @@ function Home({ lang }) {
 
   return (
     <div className="home-container">
-      <h1>BaseCamp</h1>
+      <h1>Scan & Connect</h1>
       <div className="menu-container">
         {rows.map((row, idx) => (
           <div key={idx} className="menu-row-wrapper">
