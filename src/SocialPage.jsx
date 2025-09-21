@@ -2,18 +2,19 @@
 import React, { useState, useEffect } from "react";
 import TaskList from "./components/TaskList";
 import { useUser } from "./contexts/UserContext";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import QRScanner from "./QRCode/QRScanner";
 
 function SocialPage({ lang }) {
-  const { user, profile, setProfile } = useUser(); // 用 Context 取得目前登入使用者＋profile
+  const { user, profile, setProfile } = useUser();
 
   const tasks_zh = [
-    { id: 1, text: "找同事喝咖啡(掃描QRCODE以完成任務)", point: 10 },
-    { id: 2, text: "和同事吃午餐(掃描QRCODE以完成任務)", point: 10 },
+    { id: 1, text: "跟主管開會", point: 10, requiresQRCode: true },
+    { id: 2, text: "和人資吃午餐", point: 10, requiresQRCode: true },
     { id: 3, text: "共用辦公設備", point: 10 },
     { id: 4, text: "一起參加公司活動", point: 20 },
-    { id: 5, text: "認識實習生(掃描QRCODE以完成任務)連結gmail", point: 20 },
+    { id: 5, text: "認識實習生", point: 20, requiresQRCode: true },
     { id: 6, text: "分享工作經驗", point: 15 },
     { id: 7, text: "參與團隊會議並提出建議", point: 15 },
     { id: 8, text: "組織團隊建設活動", point: 25 },
@@ -25,11 +26,11 @@ function SocialPage({ lang }) {
   ];
 
   const tasks_en = [
-    { id: 1, text: "Have coffee with colleagues", point: 10 },
-    { id: 2, text: "Have lunch together", point: 10 },
+    { id: 1, text: "Have coffee with colleagues", point: 10, requiresQRCode: true },
+    { id: 2, text: "Have lunch together", point: 10, requiresQRCode: true },
     { id: 3, text: "Share office equipment", point: 10 },
     { id: 4, text: "Participate in company events", point: 20 },
-    { id: 5, text: "Get to know interns", point: 20 },
+    { id: 5, text: "Get to know interns", point: 20, requiresQRCode: true },
     { id: 6, text: "Share work experience", point: 15 },
     { id: 7, text: "Attend team meetings and provide suggestions", point: 15 },
     { id: 8, text: "Organize team-building activities", point: 25 },
@@ -45,7 +46,10 @@ function SocialPage({ lang }) {
   const [completedIds, setCompletedIds] = useState(profile?.completedIds || []);
   const [activeTab, setActiveTab] = useState("tasks");
 
-  // 🔹Profile 有變化時，同步 completedIds
+  // 🔹掃描器控制
+  const [scanning, setScanning] = useState(false);
+  const [scanningTask, setScanningTask] = useState(null);
+
   useEffect(() => {
     setCompletedIds(profile?.completedIds || []);
   }, [profile]);
@@ -58,30 +62,67 @@ function SocialPage({ lang }) {
     const newScore = (profile.scores || 0) + task.point;
     const newCompletedIds = [...completedIds, task.id];
 
-    // 更新 Firestore → profiles collection
     const userRef = doc(db, "profiles", user.uid);
     await updateDoc(userRef, {
       scores: newScore,
       completedIds: newCompletedIds,
     });
 
-    // 更新 Context → 讓畫面同步刷新
     setProfile({
       ...profile,
       scores: newScore,
       completedIds: newCompletedIds,
     });
 
-    // 更新本地 state
     setCompletedIds(newCompletedIds);
   };
+
+  const handleScanQRCode = (task) => {
+    setScanningTask(task);
+    setScanning(true);
+  };
+
+  // 🔹掃描結果判斷
+const handleQRScanResult = (data) => {
+  if (!scanningTask) return;
+  try {
+    const parsed = typeof data === "string" ? JSON.parse(data) : data;
+
+    // 先檢查這個任務是不是已經完成
+    if (completedIds.includes(scanningTask.id)) {
+      alert(lang === "zh" ? "任務已完成 ✅" : "Task already completed ✅");
+      setScanningTask(null);
+      setScanning(false);
+      return;
+    }
+
+    // 檢查 title 條件
+    const titleMap = {
+      "跟主管開會": "主管",
+      "和人資吃午餐": "人資",
+      "認識實習生": "實習生",
+    };
+
+    const requiredTitle = titleMap[scanningTask.text];
+    if (requiredTitle && parsed.title === requiredTitle) {
+      handleComplete(scanningTask);
+      alert(lang === "zh" ? "任務完成 ✅" : "Task Completed ✅");
+    } else {
+      alert(lang === "zh" ? "QR 資料不符合任務" : "QR data does not match task");
+    }
+  } catch (err) {
+    alert(lang === "zh" ? "QR Code 格式錯誤" : "QR Code format error");
+  }
+
+  // 不論成功或失敗都結束掃描
+  setScanningTask(null);
+  setScanning(false);
+};
 
   return (
     <div className="page-container" style={{ textAlign: "center" }}>
       <h2>{lang === "zh" ? "社交任務" : "Social Tasks"}</h2>
-      <p>
-        {lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}
-      </p>
+      <p>{lang === "zh" ? "完成與同梯互動的任務" : "Complete social tasks with colleagues"}</p>
 
       {/* Tab 按鈕 */}
       <div style={{ marginBottom: "20px" }}>
@@ -115,23 +156,55 @@ function SocialPage({ lang }) {
       </div>
 
       {/* Tab 內容 */}
-{activeTab === "completed" && (
-  <TaskList
-    tasks={tasks.filter((task) => completedIds.includes(task.id))}
-    completedIds={completedIds}
-    onComplete={() => {}}
-    lang={lang}
-  />
-)}
+      {activeTab === "completed" && (
+        <TaskList
+          tasks={tasks.filter((task) => completedIds.includes(task.id))}
+          completedIds={completedIds}
+          onComplete={() => {}}
+          lang={lang}
+        />
+      )}
 
-{activeTab === "tasks" && (
-  <TaskList
-    tasks={tasks.filter((task) => !completedIds.includes(task.id))}
-    completedIds={completedIds}
-    onComplete={handleComplete}
-    lang={lang}
-  />
-)}
+      {activeTab === "tasks" && (
+        <TaskList
+          tasks={tasks.filter((task) => !completedIds.includes(task.id))}
+          completedIds={completedIds}
+          onComplete={handleComplete}
+          onScanQRCode={handleScanQRCode}
+          lang={lang}
+        />
+      )}
+
+      {/* 🔹統一掃描器控制 */}
+      {scanning && scanningTask && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.6)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+        >
+          <button
+            onClick={() => {
+              setScanning(false);
+              setScanningTask(null);
+            }}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg mb-4"
+          >
+            {lang === "zh" ? "停止掃描" : "Stop Scanning"}
+          </button>
+
+          <QRScanner scanning={scanning} onScan={handleQRScanResult} />
+        </div>
+      )}
     </div>
   );
 }
